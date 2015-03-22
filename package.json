@@ -1,0 +1,51 @@
+{
+  "name": "react-maskedinput",
+  "description": "Masked <input/> React component",
+  "version": "1.0.0",
+  "main": "./lib/index.js",
+  "standalone": "MaskedInput",
+  "homepage": "https://github.com/insin/react-maskedinput",
+  "license": "MIT",
+  "author": "Jonny Buchanan <jonathan.buchanan@gmail.com>",
+  "keywords": [
+    "react",
+    "masked",
+    "input",
+    "react-component"
+  ],
+  "dependencies": {},
+  "peerDependencies": {
+    "react": ">=0.13.0"
+  },
+  "devDependencies": {
+    "browserify": "^9.0.3",
+    "browserify-shim": "^3.8.3",
+    "del": "^1.1.1",
+    "gulp": "^3.8.11",
+    "gulp-header": "^1.2.2",
+    "gulp-jshint": "^1.9.4",
+    "gulp-plumber": "^1.0.0",
+    "gulp-react": "^3.0.1",
+    "gulp-rename": "^1.2.0",
+    "gulp-streamify": "0.0.5",
+    "gulp-uglify": "^1.1.0",
+    "gulp-util": "^3.0.4",
+    "jshint-stylish": "^1.0.1",
+    "react": ">=0.13.0",
+    "tape": "^3.5.0",
+    "vinyl-source-stream": "^1.1.0"
+  },
+  "scripts": {
+    "debug": "gulp --debug",
+    "dist": "gulp bundle-js --production --release && gulp bundle-js --development --release",
+    "test": "gulp transpile-js && tape test/*.js",
+    "watch": "gulp"
+  },
+  "browserify-shim": {
+    "react": "global:React"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/insin/react-maskedinput.git"
+  }
+}

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8">
+  <title>react-maskedinput</title>
+  <script src="http://fb.me/react-0.13.1.js"></script>
+  <script src="http://fb.me/JSXTransformer-0.13.1.js"></script>
+  <script src="../../inputmask-core/dist/inputmask-core.js"></script>
+  <script src="../dist/react-maskedinput.js"></script>
+  <style>
+  </style>
+</head>
+<body>
+<div id="app"></div>
+<script type="text/jsx;harmony=true">void function() { 'use strict';
+
+var App = React.createClass({
+  getInitialState() {
+    return {
+      date: '',
+      phone: ''
+    }
+  },
+
+  _onChange(e) {
+    var stateChange = {}
+    stateChange[e.target.name] = e.target.value
+    this.setState(stateChange)
+  },
+
+  render() {
+    return <div className="App">
+      <div>
+        <MaskedInput name="date" onChange={this._onChange} pattern="##/##/####" value={this.state.date}/> (<code>onChange</code>: {this.state.date})
+      </div>
+      <div>
+        <MaskedInput name="phone" onChange={this._onChange} pattern="(028) ### #####" value={this.state.phone}/> (<code>onChange</code>: {this.state.phone})
+      </div>
+    </div>
+  }
+})
+
+React.render(<App/>, document.getElementById('app'))
+
+}()</script>
+</body>
