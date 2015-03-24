@@ -34,8 +34,13 @@ var MaskedInput = React.createClass({
 
     var maskValue = this.mask.getValue()
     if (e.target.value != maskValue) {
-      // Naive cut detection
+      // Cut or delete operations will have shortened the value
       if (e.target.value.length < maskValue.length) {
+        var sizeDiff = maskValue.length - e.target.value.length
+        // onSelect does weird things in IE - we can only be sure of the start
+        // od the selection, so make sure it covers the difference in size
+        // before blanking out the characters which were cut or deleted.
+        this.mask.selection.end = this.mask.selection.start + sizeDiff
         this.mask.backspace()
       }
       e.target.value = this.mask.getValue()
@@ -57,10 +62,6 @@ var MaskedInput = React.createClass({
         this._updateInputSelection()
         this.props.onChange(e)
       }
-    }
-    else if (e.key == 'Delete') {
-      // Not quite sure how to handle this, so just cancel it for now
-      e.preventDefault()
     }
   },
 
