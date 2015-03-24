@@ -93,14 +93,14 @@ var MaskedInput = React.createClass({
   },
 
   render() {
-    var {pattern, ...props} = this.props
+    var {pattern, size, ...props} = this.props
     return <input {...props}
       maxLength={pattern.length}
       onChange={this._onChange}
       onKeyDown={this._onKeyDown}
       onKeyPress={this._onKeyPress}
       onPaste={this._onPaste}
-      size={pattern.length}
+      size={size || pattern.length}
       value={this.mask.getValue()}
     />
   }
