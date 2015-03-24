@@ -7,6 +7,20 @@
   <script src="../../inputmask-core/dist/inputmask-core.js"></script>
   <script src="../dist/react-maskedinput.js"></script>
   <style>
+  body {
+    box-sizing: border-box;
+    width: 550px;
+    margin: 1em auto;
+    padding: 0 1em;
+  }
+  h1 {
+    font-size: 1.5em;
+    margin-top: 0;
+  }
+  label {
+    display: block;
+    margin-bottom: .5em;
+  }
   </style>
 </head>
 <body>
@@ -16,8 +30,9 @@
 var App = React.createClass({
   getInitialState() {
     return {
-      date: '',
-      phone: ''
+      card: '',
+      expiry: '',
+      ccv: ''
     }
   },
 
@@ -29,12 +44,20 @@ var App = React.createClass({
 
   render() {
     return <div className="App">
-      <div>
-        <MaskedInput name="date" onChange={this._onChange} pattern="##/##/####" value={this.state.date}/> (<code>onChange</code>: {this.state.date})
-      </div>
-      <div>
-        <MaskedInput name="phone" onChange={this._onChange} pattern="(028) ### #####" value={this.state.phone}/> (<code>onChange</code>: {this.state.phone})
-      </div>
+      <h1><code>&lt;<a href="https://github.com/insin/react-maskedinput">MaskedInput</a>/&gt;</code></h1>
+      <label>
+        Card Number:{' '}
+        <MaskedInput pattern="#### #### #### ####" name="card" size="20" onChange={this._onChange}/>
+      </label>
+      <label>
+        Expiry Date:{' '}
+        <MaskedInput pattern="##/####" name="expiry" onChange={this._onChange}/>
+      </label>
+      <label>
+        CCV:{' '}
+        <MaskedInput pattern="###" name="ccv" onChange={this._onChange}/>
+      </label>
+      <pre><code>{JSON.stringify(this.state, null, 2)}</code></pre>
     </div>
   }
 })
