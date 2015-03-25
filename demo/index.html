@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
-  <title>react-maskedinput</title>
+  <title>react-maskedinput Demo</title>
   <script src="http://fb.me/react-0.13.1.js"></script>
   <script src="http://fb.me/JSXTransformer-0.13.1.js"></script>
   <script src="../dist/react-maskedinput.js"></script>
@@ -11,10 +11,25 @@
     width: 550px;
     margin: 1em auto;
     padding: 0 1em;
+    font-family: sans-serif;
+  }
+  code {
+    font-size: 1.3em;
   }
   h1 {
-    font-size: 1.5em;
+    font-size: 3em;
+    text-align: center;
     margin-top: 0;
+  }
+  p.lead {
+    font-weight: bold;
+    text-align: center;
+  }
+  hr {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: 0;
+    border-top: 1px solid #222;
   }
   .form-field {
     margin-bottom: .5em;
@@ -29,6 +44,9 @@
     border: none;
     font-size: 1.5em;
   }
+  footer {
+    text-align: center;
+  }
   </style>
 </head>
 <body>
@@ -41,7 +59,8 @@ var App = React.createClass({
       card: '',
       expiry: '',
       ccv: '',
-      plate: ''
+      plate: '',
+      escaped: ''
     }
   },
 
@@ -54,10 +73,12 @@ var App = React.createClass({
   render() {
     return <div className="App">
       <h1><code>&lt;<a href="https://github.com/insin/react-maskedinput">MaskedInput</a>/&gt;</code></h1>
+      <p className="lead">A React component which creates a masked <code>&lt;input/&gt;</code></p>
       <div className="form-field">
         <label htmlFor="card">Card Number:</label>
         <MaskedInput pattern="1111 1111 1111 1111" name="card" id="card" size="20" onChange={this._onChange}/>
       </div>
+      <p>Placeholders are automatically generated but can be overridden with your own:</p>
       <div className="form-field">
         <label htmlFor="expiry">Expiry Date:</label>
         <MaskedInput pattern="11/1111" name="expiry" id="expiry" placeholder="mm/yyyy" onChange={this._onChange}/>
@@ -70,7 +91,15 @@ var App = React.createClass({
         <label htmlFor="plate">License Plate:</label>
         <MaskedInput pattern="AAA 1111" name="plate" id="plate" onChange={this._onChange} placeholder="ABC 1234"/>
       </div>
+      <p>Mask placeholder characters can be escaped with a leading <code>\</code> to use them as static contents:</p>
+      <div className="form-field">
+        <label htmlFor="escaped">Escaped:</label>
+        <MaskedInput pattern="11 \* 11" name="escaped" id="escaped" onChange={this._onChange}/>
+      </div>
+      <hr/>
       <pre><code>{JSON.stringify(this.state, null, 2)}</code></pre>
+      <hr/>
+      <footer><a href="https://github.com/insin/react-maskedinput">Source on GitHub</a></footer>
     </div>
   }
 })
