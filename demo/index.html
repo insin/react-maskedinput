@@ -16,9 +16,14 @@
     font-size: 1.5em;
     margin-top: 0;
   }
-  label {
-    display: block;
+  .form-field {
     margin-bottom: .5em;
+  }
+  label {
+    display: inline-block;
+    width: 7em;
+    text-align: right;
+    margin-right: .75em;
   }
   </style>
 </head>
@@ -44,18 +49,18 @@ var App = React.createClass({
   render() {
     return <div className="App">
       <h1><code>&lt;<a href="https://github.com/insin/react-maskedinput">MaskedInput</a>/&gt;</code></h1>
-      <label>
-        Card Number:{' '}
-        <MaskedInput pattern="1111 1111 1111 1111" name="card" size="20" onChange={this._onChange}/>
-      </label>
-      <label>
-        Expiry Date:{' '}
-        <MaskedInput pattern="11/1111" name="expiry" onChange={this._onChange}/>
-      </label>
-      <label>
-        CCV:{' '}
-        <MaskedInput pattern="111" name="ccv" onChange={this._onChange}/>
-      </label>
+      <div className="form-field">
+        <label htmlFor="card">Card Number:</label>
+        <MaskedInput pattern="1111 1111 1111 1111" name="card" id="card" size="20" onChange={this._onChange}/>
+      </div>
+      <div className="form-field">
+        <label htmlFor="expiry">Expiry Date:</label>
+        <MaskedInput pattern="11/1111" name="expiry" id="expiry" onChange={this._onChange}/>
+      </div>
+      <div className="form-field">
+        <label htmlFor="ccv">CCV:</label>
+        <MaskedInput pattern="111" name="ccv" id="ccv" onChange={this._onChange}/>
+      </div>
       <pre><code>{JSON.stringify(this.state, null, 2)}</code></pre>
     </div>
   }
