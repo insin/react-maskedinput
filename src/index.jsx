@@ -43,8 +43,11 @@ var MaskedInput = React.createClass({
         this.mask.selection.end = this.mask.selection.start + sizeDiff
         this.mask.backspace()
       }
-      e.target.value = this.mask.getValue()
-      this._updateInputSelection()
+      var value = this._getDisplayValue()
+      e.target.value = value
+      if (value) {
+        this._updateInputSelection()
+      }
     }
     if (this.props.onChange) {
       this.props.onChange(e)
@@ -58,8 +61,11 @@ var MaskedInput = React.createClass({
       e.preventDefault()
       this._updateMaskSelection()
       if (this.mask.backspace()) {
-        e.target.value = this.mask.getValue()
-        this._updateInputSelection()
+        var value = this._getDisplayValue()
+        e.target.value = value
+        if (value) {
+          this._updateInputSelection()
+        }
         this.props.onChange(e)
       }
     }
@@ -94,16 +100,22 @@ var MaskedInput = React.createClass({
     }
   },
 
+  _getDisplayValue() {
+    var value = this.mask.getValue()
+    return value === this.mask.emptyValue ? '' : value
+  },
+
   render() {
-    var {pattern, size, ...props} = this.props
+    var {pattern, size, placeholder, ...props} = this.props
     return <input {...props}
       maxLength={pattern.length}
       onChange={this._onChange}
       onKeyDown={this._onKeyDown}
       onKeyPress={this._onKeyPress}
       onPaste={this._onPaste}
+      placeholder={placeholder || this.mask.emptyValue}
       size={size || pattern.length}
-      value={this.mask.getValue()}
+      value={this._getDisplayValue()}
     />
   }
 })
