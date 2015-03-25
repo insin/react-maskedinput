@@ -30,15 +30,15 @@ var CreditCardDetails = React.createClass({
     return <div className="CreditCardDetails">
       <label>
         Card Number:{' '}
-        <MaskedInput pattern="#### #### #### ####" name="card" size="20" onChange={this._onChange}/>
+        <MaskedInput pattern="1111 1111 1111 1111" name="card" size="20" onChange={this._onChange}/>
       </label>
       <label>
         Expiry Date:{' '}
-        <MaskedInput pattern="##/####" name="expiry" onChange={this._onChange}/>
+        <MaskedInput pattern="11/1111" name="expiry" onChange={this._onChange}/>
       </label>
       <label>
         CCV:{' '}
-        <MaskedInput pattern="###" name="ccv" onChange={this._onChange}/>
+        <MaskedInput pattern="111" name="ccv" onChange={this._onChange}/>
       </label>
       <pre><code>{JSON.stringify(this.state, null, 2)}</code></pre>
     </div>
