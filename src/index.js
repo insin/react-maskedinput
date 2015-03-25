@@ -3,6 +3,8 @@
 var React = require('react')
 var {getSelection, setSelection} = require('react/lib/ReactInputSelection')
 
+var InputMask = require('inputmask-core')
+
 var MaskedInput = React.createClass({
   propTypes: {
     pattern: React.PropTypes.string.isRequired
