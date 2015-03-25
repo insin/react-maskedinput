@@ -84,4 +84,4 @@ except for the following, which are managed by the component:
 * `onKeyDown`, `onKeyPress` & `onPaste` - will each trigger a call to `onChange`
 when necessary
 
-## MIT LICENSED
+## MIT Licensed
