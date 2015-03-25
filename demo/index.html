@@ -25,6 +25,10 @@
     text-align: right;
     margin-right: .75em;
   }
+  input {
+    border: none;
+    font-size: 1.5em;
+  }
   </style>
 </head>
 <body>
@@ -36,7 +40,8 @@ var App = React.createClass({
     return {
       card: '',
       expiry: '',
-      ccv: ''
+      ccv: '',
+      plate: ''
     }
   },
 
@@ -55,11 +60,15 @@ var App = React.createClass({
       </div>
       <div className="form-field">
         <label htmlFor="expiry">Expiry Date:</label>
-        <MaskedInput pattern="11/1111" name="expiry" id="expiry" onChange={this._onChange}/>
+        <MaskedInput pattern="11/1111" name="expiry" id="expiry" placeholder="mm/yyyy" onChange={this._onChange}/>
       </div>
       <div className="form-field">
         <label htmlFor="ccv">CCV:</label>
         <MaskedInput pattern="111" name="ccv" id="ccv" onChange={this._onChange}/>
+      </div>
+      <div className="form-field">
+        <label htmlFor="plate">License Plate:</label>
+        <MaskedInput pattern="AAA 1111" name="plate" id="plate" onChange={this._onChange} placeholder="ABC 1234"/>
       </div>
       <pre><code>{JSON.stringify(this.state, null, 2)}</code></pre>
     </div>
