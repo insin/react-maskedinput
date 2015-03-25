@@ -32,7 +32,7 @@ var MaskedInput = React.createClass({
   },
 
   _onChange(e) {
-    console.log('onChange', getSelection(this.getDOMNode()), e.target.value)
+    // console.log('onChange', JSON.stringify(getSelection(this.getDOMNode())), e.target.value)
 
     var maskValue = this.mask.getValue()
     if (e.target.value != maskValue) {
@@ -52,7 +52,7 @@ var MaskedInput = React.createClass({
   },
 
   _onKeyDown(e) {
-    console.log('onKeyDown', getSelection(this.getDOMNode()), e.key, e.target.value)
+    // console.log('onKeyDown', JSON.stringify(getSelection(this.getDOMNode())), e.key, e.target.value)
 
     if (e.key == 'Backspace') {
       e.preventDefault()
@@ -66,7 +66,7 @@ var MaskedInput = React.createClass({
   },
 
   _onKeyPress(e) {
-    console.log('onKeyPress', getSelection(this.getDOMNode()), e.key, e.target.value)
+    // console.log('onKeyPress', JSON.stringify(getSelection(this.getDOMNode())), e.key, e.target.value)
 
     // Ignore modified key presses
     if (e.metaKey || e.altKey || e.ctrlKey) { return }
@@ -81,7 +81,7 @@ var MaskedInput = React.createClass({
   },
 
   _onPaste(e) {
-    console.log('onPaste', getSelection(this.getDOMNode()), e.clipboardData.getData('Text'), e.target.value)
+    // console.log('onPaste', JSON.stringify(getSelection(this.getDOMNode())), e.clipboardData.getData('Text'), e.target.value)
 
     e.preventDefault()
     this._updateMaskSelection()
