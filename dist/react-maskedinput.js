@@ -1,5 +1,5 @@
 /*!
- * react-maskedinput 1.0.0 (dev build at Sun, 22 Mar 2015 03:04:53 GMT) - https://github.com/insin/react-maskedinput
+ * react-maskedinput 1.0.0 - https://github.com/insin/react-maskedinput
  * MIT Licensed
  */
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.MaskedInput = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -7,6 +7,8 @@
 
 var React = (typeof window !== "undefined" ? window.React : typeof global !== "undefined" ? global.React : null)
 var $__0=   require('react/lib/ReactInputSelection'),getSelection=$__0.getSelection,setSelection=$__0.setSelection
+
+var InputMask = require('inputmask-core')
 
 var MaskedInput = React.createClass({displayName: "MaskedInput",
   propTypes: {
@@ -35,16 +37,22 @@ var MaskedInput = React.createClass({displayName: "MaskedInput",
   },
 
   _onChange:function(e) {
-    console.log('onChange', getSelection(this.getDOMNode()), e.target.value)
+    // console.log('onChange', JSON.stringify(getSelection(this.getDOMNode())), e.target.value)
 
     var maskValue = this.mask.getValue()
     if (e.target.value != maskValue) {
-      // Naive cut detection
+      // Cut or delete operations will have shortened the value
       if (e.target.value.length < maskValue.length) {
+        var sizeDiff = maskValue.length - e.target.value.length
+        this._updateMaskSelection()
+        this.mask.selection.end = this.mask.selection.start + sizeDiff
         this.mask.backspace()
       }
-      e.target.value = this.mask.getValue()
-      this._updateInputSelection()
+      var value = this._getDisplayValue()
+      e.target.value = value
+      if (value) {
+        this._updateInputSelection()
+      }
     }
     if (this.props.onChange) {
       this.props.onChange(e)
@@ -52,25 +60,24 @@ var MaskedInput = React.createClass({displayName: "MaskedInput",
   },
 
   _onKeyDown:function(e) {
-    console.log('onKeyDown', getSelection(this.getDOMNode()), e.key, e.target.value)
+    // console.log('onKeyDown', JSON.stringify(getSelection(this.getDOMNode())), e.key, e.target.value)
 
     if (e.key == 'Backspace') {
       e.preventDefault()
       this._updateMaskSelection()
       if (this.mask.backspace()) {
-        e.target.value = this.mask.getValue()
-        this._updateInputSelection()
+        var value = this._getDisplayValue()
+        e.target.value = value
+        if (value) {
+          this._updateInputSelection()
+        }
         this.props.onChange(e)
       }
-    }
-    else if (e.key == 'Delete') {
-      // Not quite sure how to handle this, so just cancel it for now
-      e.preventDefault()
     }
   },
 
   _onKeyPress:function(e) {
-    console.log('onKeyPress', getSelection(this.getDOMNode()), e.key, e.target.value)
+    // console.log('onKeyPress', JSON.stringify(getSelection(this.getDOMNode())), e.key, e.target.value)
 
     // Ignore modified key presses
     if (e.metaKey || e.altKey || e.ctrlKey) { return }
@@ -85,7 +92,7 @@ var MaskedInput = React.createClass({displayName: "MaskedInput",
   },
 
   _onPaste:function(e) {
-    console.log('onPaste', getSelection(this.getDOMNode()), e.clipboardData.getData('Text'), e.target.value)
+    // console.log('onPaste', JSON.stringify(getSelection(this.getDOMNode())), e.clipboardData.getData('Text'), e.target.value)
 
     e.preventDefault()
     this._updateMaskSelection()
@@ -98,28 +105,359 @@ var MaskedInput = React.createClass({displayName: "MaskedInput",
     }
   },
 
-  _onSelect:function(e) {
-    console.log('onSelect', getSelection(this.getDOMNode()))
-    this._updateMaskSelection()
+  _getDisplayValue:function() {
+    var value = this.mask.getValue()
+    return value === this.mask.emptyValue ? '' : value
   },
 
   render:function() {
-    var $__0=   this.props,pattern=$__0.pattern,props=(function(source, exclusion) {var rest = {};var hasOwn = Object.prototype.hasOwnProperty;if (source == null) {throw new TypeError();}for (var key in source) {if (hasOwn.call(source, key) && !hasOwn.call(exclusion, key)) {rest[key] = source[key];}}return rest;})($__0,{pattern:1})
+    var $__0=     this.props,pattern=$__0.pattern,size=$__0.size,placeholder=$__0.placeholder,props=(function(source, exclusion) {var rest = {};var hasOwn = Object.prototype.hasOwnProperty;if (source == null) {throw new TypeError();}for (var key in source) {if (hasOwn.call(source, key) && !hasOwn.call(exclusion, key)) {rest[key] = source[key];}}return rest;})($__0,{pattern:1,size:1,placeholder:1})
+    var patternLength = this.mask.pattern.length
     return React.createElement("input", React.__spread({},  props, 
-      {maxLength: pattern.length, 
+      {maxLength: patternLength, 
       onChange: this._onChange, 
       onKeyDown: this._onKeyDown, 
       onKeyPress: this._onKeyPress, 
       onPaste: this._onPaste, 
-      onSelect: this._onSelect, 
-      size: pattern.length, 
-      value: this.mask.getValue()})
+      placeholder: placeholder || this.mask.emptyValue, 
+      size: size || patternLength, 
+      value: this._getDisplayValue()})
     )
   }
 })
 
 module.exports = MaskedInput
-},{"react/lib/ReactInputSelection":4}],2:[function(require,module,exports){
+},{"inputmask-core":2,"react/lib/ReactInputSelection":5}],2:[function(require,module,exports){
+'use strict';
+
+function extend(dest, src) {
+  if (src) {
+    var props = Object.keys(src)
+    for (var i = 0, l = props.length; i < l ; i++) {
+      dest[props[i]] = src[props[i]]
+    }
+  }
+  return dest
+}
+
+function copy(obj) {
+  return extend({}, obj)
+}
+
+var PLACEHOLDER = '_'
+var ESCAPE_CHAR = '\\'
+
+var DIGIT_RE = /^\d$/
+var LETTER_RE = /^[A-Za-z]$/
+var ALPHANNUMERIC_RE = /^[\dA-Za-z]$/
+
+var DEFAULT_FORMAT_CHARACTERS = {
+  '*': {
+    validate: function(char) { return ALPHANNUMERIC_RE.test(char) }
+  },
+  '1': {
+    validate: function(char) { return DIGIT_RE.test(char) }
+  },
+  'A': {
+    validate: function(char) { return LETTER_RE.test(char) }
+  }
+}
+
+function Pattern(source) {
+  if (!(this instanceof Pattern)) { return new Pattern(source) }
+
+  /** Editable format character validators. */
+  this.formatCharacters = DEFAULT_FORMAT_CHARACTERS
+  /** Pattern definition string with escape characters. */
+  this.source = source
+  /** Pattern characters after escape characters have been processed. */
+  this.pattern = []
+  /** Length of the pattern after escape characters have been processed. */
+  this.length = 0
+  /** Index of the first editable character. */
+  this.firstEditableIndex = null
+  /** Index of the last editable character. */
+  this.lastEditableIndex = null
+
+  /** Lookup for indices of editable characters in the pattern. */
+  this._editableIndices = {}
+
+  this._parse()
+}
+
+Pattern.prototype._parse = function parse() {
+  var sourceChars = this.source.split('')
+  var patternIndex = 0
+  var pattern = []
+
+  for (var i = 0, l = sourceChars.length; i < l; i++) {
+    var char = sourceChars[i]
+    if (char === ESCAPE_CHAR) {
+      if (i === l - 1) {
+        throw new Error('InputMask: pattern ends with a raw ' + ESCAPE_CHAR)
+      }
+      char = sourceChars[++i]
+    }
+    else if (char in this.formatCharacters) {
+      if (this.firstEditableIndex === null) {
+        this.firstEditableIndex = patternIndex
+      }
+      this.lastEditableIndex = patternIndex
+      this._editableIndices[patternIndex] = true
+    }
+
+    pattern.push(char)
+    patternIndex++
+  }
+
+  if (this.firstEditableIndex === null) {
+    throw new Error(
+      'InputMask: pattern "' + this.source + '" does not contain any editable characters.'
+    )
+  }
+
+  this.pattern = pattern
+  this.length = pattern.length
+}
+
+/**
+ * @param {Array<string>} value
+ * @return {Array<string>}
+ */
+Pattern.prototype.formatValue = function format(value) {
+  var valueBuffer = new Array(this.length)
+  var valueIndex = 0
+
+  for (var i = 0, l = this.length; i < l ; i++) {
+    if (this.isEditableIndex(i)) {
+      valueBuffer[i] = (value.length > valueIndex && this.isValidAtIndex(value[valueIndex], i)
+                        ? value[valueIndex]
+                        : PLACEHOLDER)
+      valueIndex++
+    }
+    else {
+      valueBuffer[i] = this.pattern[i]
+      // Also allow the value to contain static values from the pattern by
+      // advancing its index.
+      if (value.length > valueIndex && value[valueIndex] === this.pattern[i]) {
+        valueIndex++
+      }
+    }
+  }
+
+  return valueBuffer
+}
+
+/**
+ * @param {number} index
+ * @return {boolean}
+ */
+Pattern.prototype.isEditableIndex = function isEditableIndex(index) {
+  return !!this._editableIndices[index]
+}
+
+/**
+ * @param {string} char
+ * @param {number} index
+ * @return {boolean}
+ */
+Pattern.prototype.isValidAtIndex = function isValidAtIndex(char, index) {
+  return this.formatCharacters[this.pattern[index]].validate(char)
+}
+
+function InputMask(options) {
+  if (!(this instanceof InputMask)) { return new InputMask(options) }
+
+  options = extend({
+    pattern: null,
+    selection: {start: 0, end: 0},
+    value: ''
+  }, options)
+
+  if (options.pattern == null) {
+    throw new Error('InputMask: you must provide a pattern.')
+  }
+
+  this.setPattern(options.pattern, options.value)
+  this.setSelection(options.selection)
+}
+
+/**
+ * Applies a single character of input based on the current selection.
+ * @param {string} char
+ * @return {boolean} true if a change has been made to value or selection as a
+ *   result of the input, false otherwise.
+ */
+InputMask.prototype.input = function input(char) {
+  // Ignore additional input if the cursor's at the end of the pattern
+  if (this.selection.start === this.selection.end &&
+      this.selection.start === this.pattern.length) {
+    return false
+  }
+
+  var inputIndex = this.selection.start
+
+  // If a range of characters was selected and it includes the first editable
+  // character, make sure any input given is applied to it.
+  if (this.selection.start !== this.selection.end &&
+      this.selection.start < this.pattern.firstEditableIndex &&
+      this.selection.end > this.pattern.firstEditableIndex) {
+    inputIndex = this.pattern.firstEditableIndex
+  }
+
+  // Bail out or add the character to input
+  if (this.pattern.isEditableIndex(inputIndex)) {
+    if (!this.pattern.isValidAtIndex(char, inputIndex)) {
+      return false
+    }
+    this.value[inputIndex] = char
+  }
+
+  // If multiple characters were selected, blank the remainder out based on the
+  // pattern.
+  var end = this.selection.end - 1
+  while (end > inputIndex) {
+    if (this.pattern.isEditableIndex(end)) {
+      this.value[end] = PLACEHOLDER
+    }
+    end--
+  }
+
+  // Advance the cursor to the next character
+  this.selection.start = this.selection.end = inputIndex + 1
+
+  // Skip over any subsequent static characters
+  while (this.pattern.length > this.selection.start &&
+         !this.pattern.isEditableIndex(this.selection.start)) {
+    this.selection.start++
+    this.selection.end++
+  }
+
+  return true
+}
+
+/**
+ * Attempts to delete from the value based on the current cursor position or
+ * selection.
+ * @return {boolean} true if the value or selection changed as the result of
+ *   backspacing, false otherwise.
+ */
+InputMask.prototype.backspace = function backspace() {
+  // If the cursor is at the start there's nothing to do
+  if (this.selection.start === 0 && this.selection.end === 0) {
+    return false
+  }
+
+  var format
+
+  // No range selected - work on the character preceding the cursor
+  if (this.selection.start === this.selection.end) {
+    if (this.pattern.isEditableIndex(this.selection.start - 1)) {
+      this.value[this.selection.start - 1] = PLACEHOLDER
+    }
+    this.selection.start--
+    this.selection.end--
+  }
+  // Range selected - delete characters and leave the cursor at the start of the selection
+  else {
+    var end = this.selection.end - 1
+    while (end >= this.selection.start) {
+      if (this.pattern.isEditableIndex(end)) {
+        this.value[end] = PLACEHOLDER
+      }
+      end--
+    }
+    this.selection.end = this.selection.start
+  }
+
+  return true
+}
+
+/**
+ * Attempts to paste a string of input at the current cursor position or over
+ * the top of the current selection.
+ * Invalid content at any position will cause the paste to be rejected, and it
+ * may contain static parts of the mask's pattern.
+ * @param {string} input
+ * @return {boolean} true if the paste was successful, false otherwise.
+ */
+InputMask.prototype.paste = function paste(input) {
+  var initialValue = this.value.slice()
+  var initialSelection = copy(this.selection)
+
+  // If there are static characters at the start of the pattern and the cursor
+  // or selection is within them, the static characters must match for a valid
+  // paste.
+  if (this.selection.start < this.pattern.firstEditableIndex) {
+    for (var i = 0, l = this.pattern.firstEditableIndex - this.selection.start; i < l; i++) {
+      if (input.charAt(i) !== this.pattern.pattern[i]) {
+        return false
+      }
+    }
+
+    // Continue as if the selection and input started from the editable part of
+    // the pattern.
+    input = input.substring(this.pattern.firstEditableIndex - this.selection.start)
+    this.selection.start = this.pattern.firstEditableIndex
+  }
+
+  for (var i = 0, l = input.length;
+       i < l && this.selection.start <= this.pattern.lastEditableIndex;
+       i++) {
+    var valid = this.input(input.charAt(i))
+    // Allow static parts of the pattern to appear in pasted input - they will
+    // already have been stepped over by input(), so verify that the value
+    // deemed invalid by input() was the expected static character.
+    if (!valid) {
+      if (this.selection.start > 0) {
+        // XXX This only allows for one static character to be skipped
+        var patternIndex = this.selection.start - 1
+        if (!this.pattern.isEditableIndex(patternIndex) &&
+            input.charAt(i) === this.pattern.pattern[patternIndex]) {
+          continue
+        }
+      }
+      this.value = initialValue
+      this.selection = initialSelection
+      return false
+    }
+  }
+  return true
+}
+
+InputMask.prototype.setPattern = function setPattern(pattern, value) {
+  this.pattern = new Pattern(pattern)
+  this.setValue(value || '')
+  this.emptyValue = this.pattern.formatValue([]).join('')
+}
+
+InputMask.prototype.setSelection = function setSelection(selection) {
+  this.selection = copy(selection)
+  if (this.selection.start === this.selection.end) {
+    if (this.selection.start < this.pattern.firstEditableIndex) {
+      this.selection.start = this.selection.end = this.pattern.firstEditableIndex
+      return true
+    }
+    if (this.selection.end > this.pattern.lastEditableIndex + 1) {
+      this.selection.start = this.selection.end = this.pattern.lastEditableIndex + 1
+      return true
+    }
+  }
+  return false
+}
+
+InputMask.prototype.setValue = function setValue(value) {
+  this.value = this.pattern.formatValue(value.split(''))
+}
+
+InputMask.prototype.getValue = function getValue() {
+  return this.value.join('')
+}
+
+InputMask.Pattern = Pattern
+
+module.exports = InputMask
+},{}],3:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -163,7 +501,7 @@ var ExecutionEnvironment = {
 
 module.exports = ExecutionEnvironment;
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -376,7 +714,7 @@ var ReactDOMSelection = {
 
 module.exports = ReactDOMSelection;
 
-},{"./ExecutionEnvironment":2,"./getNodeForCharacterOffset":8,"./getTextContentAccessor":9}],4:[function(require,module,exports){
+},{"./ExecutionEnvironment":3,"./getNodeForCharacterOffset":9,"./getTextContentAccessor":10}],5:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -511,7 +849,7 @@ var ReactInputSelection = {
 
 module.exports = ReactInputSelection;
 
-},{"./ReactDOMSelection":3,"./containsNode":5,"./focusNode":6,"./getActiveElement":7}],5:[function(require,module,exports){
+},{"./ReactDOMSelection":4,"./containsNode":6,"./focusNode":7,"./getActiveElement":8}],6:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -555,7 +893,7 @@ function containsNode(outerNode, innerNode) {
 
 module.exports = containsNode;
 
-},{"./isTextNode":11}],6:[function(require,module,exports){
+},{"./isTextNode":12}],7:[function(require,module,exports){
 /**
  * Copyright 2014-2015, Facebook, Inc.
  * All rights reserved.
@@ -584,7 +922,7 @@ function focusNode(node) {
 
 module.exports = focusNode;
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -613,7 +951,7 @@ function getActiveElement() /*?DOMElement*/ {
 
 module.exports = getActiveElement;
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -688,7 +1026,7 @@ function getNodeForCharacterOffset(root, offset) {
 
 module.exports = getNodeForCharacterOffset;
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -725,7 +1063,7 @@ function getTextContentAccessor() {
 
 module.exports = getTextContentAccessor;
 
-},{"./ExecutionEnvironment":2}],10:[function(require,module,exports){
+},{"./ExecutionEnvironment":3}],11:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -752,7 +1090,7 @@ function isNode(object) {
 
 module.exports = isNode;
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -777,5 +1115,5 @@ function isTextNode(object) {
 
 module.exports = isTextNode;
 
-},{"./isNode":10}]},{},[1])(1)
+},{"./isNode":11}]},{},[1])(1)
 });

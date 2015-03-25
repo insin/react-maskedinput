@@ -1,0 +1,8 @@
+demo
+dist
+src
+test
+.gitignore
+.jshintrc
+.travis.yml
+gulpfile.js
