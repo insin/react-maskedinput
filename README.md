@@ -5,6 +5,25 @@ built on top of [inputmask-core](https://github.com/insin/inputmask-core).
 
 ## [Live Demo](http://insin.github.io/react-maskedinput/)
 
+## Install
+
+### npm
+
+`MaskedInput` can be used on the server, or bundled for the client using an
+npm-compatible packaging system such as [Browserify](http://browserify.org/) or
+[webpack](http://webpack.github.io/).
+
+```
+npm install react-maskedinput --save
+```
+
+### Browser bundle
+
+The browser bundle exposes a global `MaskedInput` variable and expects to find
+a global `React` variable to work with.
+
+You can find it in the [/dist directory](https://github.com/insin/react-maskedinput/tree/master/dist).
+
 ## Usage
 
 Give `MaskedInput` a [`pattern`](#pattern-string) and an `onChange` callback:
@@ -34,13 +53,12 @@ var CreditCardDetails = React.createClass({
       </label>
       <label>
         Expiry Date:{' '}
-        <MaskedInput pattern="11/1111" name="expiry" onChange={this._onChange}/>
+        <MaskedInput pattern="11/1111" name="expiry" placeholder="mm/yyyy" onChange={this._onChange}/>
       </label>
       <label>
         CCV:{' '}
         <MaskedInput pattern="111" name="ccv" onChange={this._onChange}/>
       </label>
-      <pre><code>{JSON.stringify(this.state, null, 2)}</code></pre>
     </div>
   }
 })
@@ -64,11 +82,16 @@ This will be passed a `SyntheticEvent` with the input accessible via
 
 **Note:** this component currently calls `onChange` directly, it does not
 generate an `onChange` event which will bubble up like a regular `<input>`
-comonent, so you *must* pass an `onChange` if you want to get a value back out.
+component, so you *must* pass an `onChange` if you want to get a value back out.
 
 ### `value` : `string`
 
 A default value for the mask.
+
+### `placeholder` : `string`
+
+A default `placeholder` will be generated from the mask's pattern, but you can
+pass a `placeholder` prop to provide your own.
 
 ### `size` : `number | string`
 
