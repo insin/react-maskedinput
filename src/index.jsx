@@ -7,7 +7,9 @@ var InputMask = require('inputmask-core')
 
 var MaskedInput = React.createClass({
   propTypes: {
-    pattern: React.PropTypes.string.isRequired
+    pattern: React.PropTypes.string.isRequired,
+
+    formatCharacters: React.PropTypes.object
   },
 
   getDefaultProps() {
@@ -19,7 +21,8 @@ var MaskedInput = React.createClass({
   componentWillMount() {
     this.mask = new InputMask({
       pattern: this.props.pattern,
-      value: this.props.value
+      value: this.props.value,
+      formatCharacters: this.props.formatCharacters
     })
   },
 

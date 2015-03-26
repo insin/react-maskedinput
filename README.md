@@ -84,6 +84,13 @@ This will be passed a `SyntheticEvent` with the input accessible via
 generate an `onChange` event which will bubble up like a regular `<input>`
 component, so you *must* pass an `onChange` if you want to get a value back out.
 
+### `formatCharacters`: `Object`
+
+Customised format character definitions for use in the pattern.
+
+See the [inputmask-core docs](https://github.com/insin/inputmask-core#formatcharacters)
+for details of the structure of this object.
+
 ### `value` : `string`
 
 A default value for the mask.
