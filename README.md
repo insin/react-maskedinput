@@ -64,6 +64,28 @@ var CreditCardDetails = React.createClass({
 })
 ```
 
+Create some wrapper components if you have a masking configuration which will be
+reused:
+
+```javascript
+var CustomInput = React.createClass({
+  render() {
+    return <MaskedInput
+      pattern="1111-WW-11"
+      placeholder="1234-WW-12"
+      size="11"
+      {...this.props}
+      formatCharacters={{
+        'W': {
+          validate(char) { return /\w/.test(char ) },
+          transform(char) { return char.toUpperCase() }
+        }
+      }
+    }/>
+  }
+})
+```
+
 ## Props
 
 ### `pattern` : `string`

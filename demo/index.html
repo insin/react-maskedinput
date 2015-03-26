@@ -60,7 +60,8 @@ var App = React.createClass({
       expiry: '',
       ccv: '',
       plate: '',
-      escaped: ''
+      escaped: '',
+      custom: ''
     }
   },
 
@@ -96,11 +97,32 @@ var App = React.createClass({
         <label htmlFor="escaped">Escaped:</label>
         <MaskedInput pattern="11 \* 11" name="escaped" id="escaped" onChange={this._onChange}/>
       </div>
+      <div className="form-field">
+        <label htmlFor="custom">Custom:</label>
+        <CustomInput name="custom" id="custom" onChange={this._onChange}/>
+      </div>
       <hr/>
       <pre><code>{JSON.stringify(this.state, null, 2)}</code></pre>
       <hr/>
       <footer><a href="https://github.com/insin/react-maskedinput">Source on GitHub</a></footer>
     </div>
+  }
+})
+
+var CustomInput = React.createClass({
+  render() {
+    return <MaskedInput
+      pattern="1111-WW-11"
+      placeholder="1234-WW-12"
+      size="11"
+      {...this.props}
+      formatCharacters={{
+        'W': {
+          validate(char) { return /\w/.test(char ) },
+          transform(char) { return char.toUpperCase() }
+        }
+      }
+    }/>
   }
 })
 
