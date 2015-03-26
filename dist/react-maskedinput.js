@@ -1,5 +1,5 @@
 /*!
- * react-maskedinput 1.0.0 - https://github.com/insin/react-maskedinput
+ * react-maskedinput 1.1.0 - https://github.com/insin/react-maskedinput
  * MIT Licensed
  */
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.MaskedInput = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -12,7 +12,9 @@ var InputMask = require('inputmask-core')
 
 var MaskedInput = React.createClass({displayName: "MaskedInput",
   propTypes: {
-    pattern: React.PropTypes.string.isRequired
+    pattern: React.PropTypes.string.isRequired,
+
+    formatCharacters: React.PropTypes.object
   },
 
   getDefaultProps:function() {
@@ -24,7 +26,8 @@ var MaskedInput = React.createClass({displayName: "MaskedInput",
   componentWillMount:function() {
     this.mask = new InputMask({
       pattern: this.props.pattern,
-      value: this.props.value
+      value: this.props.value,
+      formatCharacters: this.props.formatCharacters
     })
   },
 
@@ -111,7 +114,7 @@ var MaskedInput = React.createClass({displayName: "MaskedInput",
   },
 
   render:function() {
-    var $__0=     this.props,pattern=$__0.pattern,size=$__0.size,placeholder=$__0.placeholder,props=(function(source, exclusion) {var rest = {};var hasOwn = Object.prototype.hasOwnProperty;if (source == null) {throw new TypeError();}for (var key in source) {if (hasOwn.call(source, key) && !hasOwn.call(exclusion, key)) {rest[key] = source[key];}}return rest;})($__0,{pattern:1,size:1,placeholder:1})
+    var $__0=      this.props,pattern=$__0.pattern,formatCharacters=$__0.formatCharacters,size=$__0.size,placeholder=$__0.placeholder,props=(function(source, exclusion) {var rest = {};var hasOwn = Object.prototype.hasOwnProperty;if (source == null) {throw new TypeError();}for (var key in source) {if (hasOwn.call(source, key) && !hasOwn.call(exclusion, key)) {rest[key] = source[key];}}return rest;})($__0,{pattern:1,formatCharacters:1,size:1,placeholder:1})
     var patternLength = this.mask.pattern.length
     return React.createElement("input", React.__spread({},  props, 
       {maxLength: patternLength, 
@@ -144,6 +147,29 @@ function copy(obj) {
   return extend({}, obj)
 }
 
+/**
+ * Merge an object defining format characters into the defaults.
+ * Passing null/undefined for en existing format character removes it.
+ * Passing a definition for an existing format character overrides it.
+ * @param {?Object} formatCharacters.
+ */
+function mergeFormatCharacters(formatCharacters) {
+  var merged = copy(DEFAULT_FORMAT_CHARACTERS)
+  if (formatCharacters) {
+    var chars = Object.keys(formatCharacters)
+    for (var i = 0, l = chars.length; i < l ; i++) {
+      var char = chars[i]
+      if (formatCharacters[char] == null) {
+        delete merged[char]
+      }
+      else {
+        merged[char] = formatCharacters[char]
+      }
+    }
+  }
+  return merged
+}
+
 var PLACEHOLDER = '_'
 var ESCAPE_CHAR = '\\'
 
@@ -158,16 +184,28 @@ var DEFAULT_FORMAT_CHARACTERS = {
   '1': {
     validate: function(char) { return DIGIT_RE.test(char) }
   },
-  'A': {
+  'a': {
     validate: function(char) { return LETTER_RE.test(char) }
+  },
+  'A': {
+    validate: function(char) { return LETTER_RE.test(char) },
+    transform: function(char) { return char.toUpperCase() }
+  },
+  '#': {
+    validate: function(char) { return ALPHANNUMERIC_RE.test(char) },
+    transform: function(char) { return char.toUpperCase() }
   }
 }
 
-function Pattern(source) {
+/**
+ * @param {string} source
+ * @patam {?Object} formatCharacters
+ */
+function Pattern(source, formatCharacters) {
   if (!(this instanceof Pattern)) { return new Pattern(source) }
 
-  /** Editable format character validators. */
-  this.formatCharacters = DEFAULT_FORMAT_CHARACTERS
+  /** Format character definitions. */
+  this.formatCharacters = formatCharacters || DEFAULT_FORMAT_CHARACTERS
   /** Pattern definition string with escape characters. */
   this.source = source
   /** Pattern characters after escape characters have been processed. */
@@ -231,7 +269,7 @@ Pattern.prototype.formatValue = function format(value) {
   for (var i = 0, l = this.length; i < l ; i++) {
     if (this.isEditableIndex(i)) {
       valueBuffer[i] = (value.length > valueIndex && this.isValidAtIndex(value[valueIndex], i)
-                        ? value[valueIndex]
+                        ? this.transform(value[valueIndex], i)
                         : PLACEHOLDER)
       valueIndex++
     }
@@ -265,10 +303,16 @@ Pattern.prototype.isValidAtIndex = function isValidAtIndex(char, index) {
   return this.formatCharacters[this.pattern[index]].validate(char)
 }
 
+Pattern.prototype.transform = function transform(char, index) {
+  var format = this.formatCharacters[this.pattern[index]]
+  return typeof format.transform == 'function' ? format.transform(char) : char
+}
+
 function InputMask(options) {
   if (!(this instanceof InputMask)) { return new InputMask(options) }
 
   options = extend({
+    formatCharacters: null,
     pattern: null,
     selection: {start: 0, end: 0},
     value: ''
@@ -278,6 +322,7 @@ function InputMask(options) {
     throw new Error('InputMask: you must provide a pattern.')
   }
 
+  this.formatCharacters = mergeFormatCharacters(options.formatCharacters)
   this.setPattern(options.pattern, options.value)
   this.setSelection(options.selection)
 }
@@ -310,7 +355,7 @@ InputMask.prototype.input = function input(char) {
     if (!this.pattern.isValidAtIndex(char, inputIndex)) {
       return false
     }
-    this.value[inputIndex] = char
+    this.value[inputIndex] = this.pattern.transform(char, inputIndex)
   }
 
   // If multiple characters were selected, blank the remainder out based on the
@@ -426,7 +471,7 @@ InputMask.prototype.paste = function paste(input) {
 }
 
 InputMask.prototype.setPattern = function setPattern(pattern, value) {
-  this.pattern = new Pattern(pattern)
+  this.pattern = new Pattern(pattern, this.formatCharacters)
   this.setValue(value || '')
   this.emptyValue = this.pattern.formatValue([]).join('')
 }

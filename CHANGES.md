@@ -1,3 +1,5 @@
+## 1.1.0 / 2015-03-26
+
 Updated to [inputmaask-core@1.2.0](https://github.com/insin/inputmask-core/blob/master/CHANGES.md#120--2015-03-26)
 
 A `formatCharacters` prop can now be passed to configure input mask format
