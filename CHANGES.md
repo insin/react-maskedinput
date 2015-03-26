@@ -1,6 +1,6 @@
 ## 1.1.0 / 2015-03-26
 
-Updated to [inputmaask-core@1.2.0](https://github.com/insin/inputmask-core/blob/master/CHANGES.md#120--2015-03-26)
+Updated to [inputmask-core@1.2.0](https://github.com/insin/inputmask-core/blob/master/CHANGES.md#120--2015-03-26)
 
 A `formatCharacters` prop can now be passed to configure input mask format
 characters.
@@ -9,7 +9,7 @@ characters.
 
 Initial release features:
 
-* Based on [inputmaask-core@1.1.0](https://github.com/insin/inputmask-core/blob/master/CHANGES.md#110--2015-03-25)
+* Based on [inputmask-core@1.1.0](https://github.com/insin/inputmask-core/blob/master/CHANGES.md#110--2015-03-25)
 * Basic editing works:
   * Typing, backspacing, pasting, cutting and deleting
   * Invalid content will be ignored if typed or pasted
