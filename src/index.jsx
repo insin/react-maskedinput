@@ -5,6 +5,17 @@ var {getSelection, setSelection} = require('react/lib/ReactInputSelection')
 
 var InputMask = require('inputmask-core')
 
+var KEYCODE_Z = 90
+var KEYCODE_Y = 89
+
+function isUndo(e) {
+  return (e.ctrlKey || e.metaKey) && e.keyCode === (e.shiftKey ? KEYCODE_Y : KEYCODE_Z)
+}
+
+function isRedo(e) {
+  return (e.ctrlKey || e.metaKey) && e.keyCode === (e.shiftKey ? KEYCODE_Z : KEYCODE_Y)
+}
+
 var MaskedInput = React.createClass({
   propTypes: {
     pattern: React.PropTypes.string.isRequired,
@@ -59,6 +70,25 @@ var MaskedInput = React.createClass({
 
   _onKeyDown(e) {
     // console.log('onKeyDown', JSON.stringify(getSelection(this.getDOMNode())), e.key, e.target.value)
+
+    if (isUndo(e)) {
+      e.preventDefault()
+      if (this.mask.undo()) {
+        e.target.value = this._getDisplayValue()
+        this._updateInputSelection()
+        this.props.onChange(e)
+      }
+      return
+    }
+    else if (isRedo(e)) {
+      e.preventDefault()
+      if (this.mask.redo()) {
+        e.target.value = this._getDisplayValue()
+        this._updateInputSelection()
+        this.props.onChange(e)
+      }
+      return
+    }
 
     if (e.key == 'Backspace') {
       e.preventDefault()

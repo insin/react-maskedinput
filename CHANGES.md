@@ -1,3 +1,7 @@
+Updated to [inputmask-core@2.0.0](https://github.com/insin/inputmask-core/blob/master/CHANGES.md#200--2015-04-03)
+
+Added undo/redo when Ctrl/Command + Z/Y are used.
+
 ## 1.1.0 / 2015-03-26
 
 Updated to [inputmask-core@1.2.0](https://github.com/insin/inputmask-core/blob/master/CHANGES.md#120--2015-03-26)
