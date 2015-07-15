@@ -68,6 +68,7 @@ var App = React.createClass({
       ccv: '',
       plate: '',
       escaped: '',
+      leading: '',
       custom: '',
       changing: '',
       pattern: '1111 1111'
@@ -109,6 +110,11 @@ var App = React.createClass({
       <div className="form-field">
         <label htmlFor="escaped">Escaped:</label>
         <MaskedInput pattern="11 \* 11" name="escaped" id="escaped" onChange={this._onChange}/>
+      </div>
+      <p>Leading static characters:</p>
+      <div className="form-field">
+        <label htmlFor="leading">Leading:</label>
+        <MaskedInput pattern="(0) 111 1111" name="leading" id="leading" onChange={this._onChange}/>
       </div>
       <p>Changing patterns:</p>
       <div className="form-field">
