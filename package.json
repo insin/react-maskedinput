@@ -14,7 +14,7 @@
     "react-component"
   ],
   "dependencies": {
-    "inputmask-core": "^2.0.0"
+    "inputmask-core": "^2.1.0"
   },
   "peerDependencies": {
     "react": ">=0.12.0"

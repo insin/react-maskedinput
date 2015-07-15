@@ -2,8 +2,8 @@
 <head>
   <meta charset="UTF-8">
   <title>react-maskedinput Demo</title>
-  <script src="http://fb.me/react-0.13.1.js"></script>
-  <script src="http://fb.me/JSXTransformer-0.13.1.js"></script>
+  <script src="http://fb.me/react-0.13.3.js"></script>
+  <script src="http://fb.me/JSXTransformer-0.13.3.js"></script>
   <script src="../dist/react-maskedinput.js"></script>
   <style>
   body {
@@ -97,6 +97,7 @@ var App = React.createClass({
         <label htmlFor="escaped">Escaped:</label>
         <MaskedInput pattern="11 \* 11" name="escaped" id="escaped" onChange={this._onChange}/>
       </div>
+      <p>Custom format character (W=[a-zA-Z0-9_], transformed to uppercase) and placeholder character (en space):</p>
       <div className="form-field">
         <label htmlFor="custom">Custom:</label>
         <CustomInput name="custom" id="custom" onChange={this._onChange}/>
@@ -114,6 +115,7 @@ var CustomInput = React.createClass({
     return <MaskedInput
       pattern="1111-WW-11"
       placeholder="1234-WW-12"
+      placeholderChar=" "
       size="11"
       {...this.props}
       formatCharacters={{

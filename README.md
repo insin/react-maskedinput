@@ -113,6 +113,12 @@ Customised format character definitions for use in the pattern.
 See the [inputmask-core docs](https://github.com/insin/inputmask-core#formatcharacters)
 for details of the structure of this object.
 
+### `placeholderChar`: `string`
+
+Customised placeholder character used to fill in editable parts of the pattern.
+
+See the [inputmask-core docs](https://github.com/insin/inputmask-core#placeholderchar--string) for details.
+
 ### `value` : `string`
 
 A default value for the mask.
