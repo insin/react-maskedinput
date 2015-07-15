@@ -42,6 +42,12 @@ var MaskedInput = React.createClass({
     this.mask = new InputMask(options)
   },
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.pattern !== nextProps.pattern) {
+      this.mask.setPattern(nextProps.pattern, {value: this.mask.getRawValue()})
+    }
+  },
+
   _updateMaskSelection() {
     this.mask.selection = getSelection(this.getDOMNode())
   },

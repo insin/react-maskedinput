@@ -53,6 +53,13 @@
 <div id="app"></div>
 <script type="text/jsx;harmony=true">void function() { 'use strict';
 
+var PATTERNS = [
+  '1111 1111',
+  '111 111',
+  '11 11',
+  '1 1'
+]
+
 var App = React.createClass({
   getInitialState() {
     return {
@@ -61,7 +68,9 @@ var App = React.createClass({
       ccv: '',
       plate: '',
       escaped: '',
-      custom: ''
+      custom: '',
+      changing: '',
+      pattern: '1111 1111'
     }
   },
 
@@ -69,6 +78,10 @@ var App = React.createClass({
     var stateChange = {}
     stateChange[e.target.name] = e.target.value
     this.setState(stateChange)
+  },
+
+  _changePattern(e) {
+    this.setState({pattern: e.target.value})
   },
 
   render() {
@@ -96,6 +109,17 @@ var App = React.createClass({
       <div className="form-field">
         <label htmlFor="escaped">Escaped:</label>
         <MaskedInput pattern="11 \* 11" name="escaped" id="escaped" onChange={this._onChange}/>
+      </div>
+      <p>Changing patterns:</p>
+      <div className="form-field">
+        <label htmlFor="changing">Input:</label>
+        <MaskedInput pattern={this.state.pattern} name="changing" id="changing" onChange={this._onChange}/>
+      </div>
+      <div className="form-field">
+        <label htmlFor="pattern">Pattern:</label>
+        <select onChange={this._changePattern}>
+          {PATTERNS.map(pattern => <option value={pattern}>{pattern}</option>)}
+        </select>
       </div>
       <p>Custom format character (W=[a-zA-Z0-9_], transformed to uppercase) and placeholder character (en space):</p>
       <div className="form-field">
