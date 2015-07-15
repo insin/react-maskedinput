@@ -71,7 +71,8 @@ var App = React.createClass({
       leading: '',
       custom: '',
       changing: '',
-      pattern: '1111 1111'
+      pattern: '1111 1111',
+      linked: '111'
     }
   },
 
@@ -85,6 +86,10 @@ var App = React.createClass({
     this.setState({pattern: e.target.value})
   },
 
+  setZero: function() {
+    this.setState({linked: '0000'})
+  },
+
   render() {
     return <div className="App">
       <h1><code>&lt;<a href="https://github.com/insin/react-maskedinput">MaskedInput</a>/&gt;</code></h1>
@@ -92,6 +97,13 @@ var App = React.createClass({
       <div className="form-field">
         <label htmlFor="card">Card Number:</label>
         <MaskedInput pattern="1111 1111 1111 1111" name="card" id="card" size="20" onChange={this._onChange}/>
+      </div>
+      <div className="form-field">
+        <label htmlFor="card">Linked input:</label>
+        <button type="text" onClick={this.setZero}>Set linked input to 0000000</button>
+        <br/>
+        <MaskedInput pattern="1111 1111 1111 1111" name="linked" value={this.state.linked} id="card" size="20" onChange={this._onChange}/>
+        <MaskedInput pattern="1111 1111 1111 1111" name="linked" value={this.state.linked}  id="card" size="20" onChange={this._onChange}/>
       </div>
       <p>Placeholders are automatically generated but can be overridden with your own:</p>
       <div className="form-field">
