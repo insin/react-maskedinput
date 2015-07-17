@@ -75,7 +75,7 @@ var MaskedInput = React.createClass({
       }
     }
     if (this.props.onChange) {
-      this.props.onChange(e)
+      this.props.onChange(e, this.mask)
     }
   },
 
@@ -87,7 +87,7 @@ var MaskedInput = React.createClass({
       if (this.mask.undo()) {
         e.target.value = this._getDisplayValue()
         this._updateInputSelection()
-        this.props.onChange(e)
+        this.props.onChange(e, this.mask)
       }
       return
     }
@@ -96,7 +96,7 @@ var MaskedInput = React.createClass({
       if (this.mask.redo()) {
         e.target.value = this._getDisplayValue()
         this._updateInputSelection()
-        this.props.onChange(e)
+        this.props.onChange(e, this.mask)
       }
       return
     }
@@ -110,7 +110,7 @@ var MaskedInput = React.createClass({
         if (value) {
           this._updateInputSelection()
         }
-        this.props.onChange(e)
+        this.props.onChange(e, this.mask)
       }
     }
   },
@@ -140,7 +140,7 @@ var MaskedInput = React.createClass({
       e.target.value = this.mask.getValue()
       // Timeout needed for IE
       setTimeout(this._updateInputSelection, 0)
-      this.props.onChange(e)
+      this.props.onChange(e, this.mask)
     }
   },
 
