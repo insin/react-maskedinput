@@ -1,11 +1,11 @@
 /*!
- * react-maskedinput 2.0.0 - https://github.com/insin/react-maskedinput
+ * react-maskedinput 2.0.0 (dev build at Wed, 15 Jul 2015 12:05:32 GMT) - https://github.com/insin/react-maskedinput
  * MIT Licensed
  */
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.MaskedInput = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
-var React = (typeof window !== "undefined" ? window.React : typeof global !== "undefined" ? global.React : null)
+var React = (typeof window !== "undefined" ? window['React'] : typeof global !== "undefined" ? global['React'] : null)
 var $__0=   require('react/lib/ReactInputSelection'),getSelection=$__0.getSelection,setSelection=$__0.setSelection
 
 var InputMask = require('inputmask-core')
@@ -25,7 +25,8 @@ var MaskedInput = React.createClass({displayName: "MaskedInput",
   propTypes: {
     pattern: React.PropTypes.string.isRequired,
 
-    formatCharacters: React.PropTypes.object
+    formatCharacters: React.PropTypes.object,
+    placeholderChar: React.PropTypes.string
   },
 
   getDefaultProps:function() {
@@ -35,11 +36,25 @@ var MaskedInput = React.createClass({displayName: "MaskedInput",
   },
 
   componentWillMount:function() {
-    this.mask = new InputMask({
+    var options = {
       pattern: this.props.pattern,
       value: this.props.value,
       formatCharacters: this.props.formatCharacters
-    })
+    }
+    if (this.props.placeholderChar) {
+      options.placeholderChar = this.props.placeholderChar
+    }
+    this.mask = new InputMask(options)
+  },
+
+  componentWillReceiveProps:function(nextProps) {
+    if (this.props.pattern !== nextProps.pattern) {
+      this.mask.setPattern(nextProps.pattern, {value: this.mask.getRawValue()})
+    }
+    if (this.props.value !== nextProps.value) {
+      
+      this.mask.setValue(nextProps.value, {value: this.mask.getRawValue()})
+    }
   },
 
   _updateMaskSelection:function() {
@@ -160,8 +175,9 @@ var MaskedInput = React.createClass({displayName: "MaskedInput",
 })
 
 module.exports = MaskedInput
+
 },{"inputmask-core":2,"react/lib/ReactInputSelection":5}],2:[function(require,module,exports){
-'use strict';
+'use strict'
 
 function extend(dest, src) {
   if (src) {
@@ -200,13 +216,13 @@ function mergeFormatCharacters(formatCharacters) {
   return merged
 }
 
-var PLACEHOLDER = '_'
 var ESCAPE_CHAR = '\\'
 
 var DIGIT_RE = /^\d$/
 var LETTER_RE = /^[A-Za-z]$/
 var ALPHANNUMERIC_RE = /^[\dA-Za-z]$/
 
+var DEFAULT_PLACEHOLDER_CHAR = '_'
 var DEFAULT_FORMAT_CHARACTERS = {
   '*': {
     validate: function(char) { return ALPHANNUMERIC_RE.test(char) }
@@ -231,9 +247,13 @@ var DEFAULT_FORMAT_CHARACTERS = {
  * @param {string} source
  * @patam {?Object} formatCharacters
  */
-function Pattern(source, formatCharacters) {
-  if (!(this instanceof Pattern)) { return new Pattern(source) }
+function Pattern(source, formatCharacters, placeholderChar) {
+  if (!(this instanceof Pattern)) {
+    return new Pattern(source, formatCharacters, placeholderChar)
+  }
 
+  /** Placeholder character */
+  this.placeholderChar = placeholderChar || DEFAULT_PLACEHOLDER_CHAR
   /** Format character definitions. */
   this.formatCharacters = formatCharacters || DEFAULT_FORMAT_CHARACTERS
   /** Pattern definition string with escape characters. */
@@ -300,7 +320,7 @@ Pattern.prototype.formatValue = function format(value) {
     if (this.isEditableIndex(i)) {
       valueBuffer[i] = (value.length > valueIndex && this.isValidAtIndex(value[valueIndex], i)
                         ? this.transform(value[valueIndex], i)
-                        : PLACEHOLDER)
+                        : this.placeholderChar)
       valueIndex++
     }
     else {
@@ -344,6 +364,7 @@ function InputMask(options) {
   options = extend({
     formatCharacters: null,
     pattern: null,
+    placeholderChar: DEFAULT_PLACEHOLDER_CHAR,
     selection: {start: 0, end: 0},
     value: ''
   }, options)
@@ -352,6 +373,11 @@ function InputMask(options) {
     throw new Error('InputMask: you must provide a pattern.')
   }
 
+  if (options.placeholderChar.length !== 1) {
+    throw new Error('InputMask: placeholderChar should be a single character.')
+  }
+
+  this.placeholderChar = options.placeholderChar
   this.formatCharacters = mergeFormatCharacters(options.formatCharacters)
   this.setPattern(options.pattern, {
     value: options.value,
@@ -379,11 +405,9 @@ InputMask.prototype.input = function input(char) {
 
   var inputIndex = this.selection.start
 
-  // If a range of characters was selected and it includes the first editable
-  // character, make sure any input given is applied to it.
-  if (this.selection.start !== this.selection.end &&
-      this.selection.start < this.pattern.firstEditableIndex &&
-      this.selection.end > this.pattern.firstEditableIndex) {
+  // If the cursor or selection is prior to the first editable character, make
+  // sure any input given is applied to it.
+  if (inputIndex < this.pattern.firstEditableIndex) {
     inputIndex = this.pattern.firstEditableIndex
   }
 
@@ -400,7 +424,7 @@ InputMask.prototype.input = function input(char) {
   var end = this.selection.end - 1
   while (end > inputIndex) {
     if (this.pattern.isEditableIndex(end)) {
-      this.value[end] = PLACEHOLDER
+      this.value[end] = this.placeholderChar
     }
     end--
   }
@@ -422,9 +446,9 @@ InputMask.prototype.input = function input(char) {
     this._history.splice(this._historyIndex, this._history.length - this._historyIndex)
     this._historyIndex = null
   }
-  if (this._lastOp != 'input' ||
-      selectionBefore.start != selectionBefore.end ||
-      this._lastSelection != null && selectionBefore.start != this._lastSelection.start) {
+  if (this._lastOp !== 'input' ||
+      selectionBefore.start !== selectionBefore.end ||
+      this._lastSelection !== null && selectionBefore.start !== this._lastSelection.start) {
     this._history.push({value: valueBefore, selection: selectionBefore, lastOp: this._lastOp})
   }
   this._lastOp = 'input'
@@ -448,12 +472,10 @@ InputMask.prototype.backspace = function backspace() {
   var selectionBefore = copy(this.selection)
   var valueBefore = this.getValue()
 
-  var format
-
   // No range selected - work on the character preceding the cursor
   if (this.selection.start === this.selection.end) {
     if (this.pattern.isEditableIndex(this.selection.start - 1)) {
-      this.value[this.selection.start - 1] = PLACEHOLDER
+      this.value[this.selection.start - 1] = this.placeholderChar
     }
     this.selection.start--
     this.selection.end--
@@ -463,7 +485,7 @@ InputMask.prototype.backspace = function backspace() {
     var end = this.selection.end - 1
     while (end >= this.selection.start) {
       if (this.pattern.isEditableIndex(end)) {
-        this.value[end] = PLACEHOLDER
+        this.value[end] = this.placeholderChar
       }
       end--
     }
@@ -475,9 +497,9 @@ InputMask.prototype.backspace = function backspace() {
     // Took more input after undoing, so blow any subsequent history away
     this._history.splice(this._historyIndex, this._history.length - this._historyIndex)
   }
-  if (this._lastOp != 'backspace' ||
-      selectionBefore.start != selectionBefore.end ||
-      this._lastSelection != null && selectionBefore.start != this._lastSelection.start) {
+  if (this._lastOp !== 'backspace' ||
+      selectionBefore.start !== selectionBefore.end ||
+      this._lastSelection !== null && selectionBefore.start !== this._lastSelection.start) {
     this._history.push({value: valueBefore, selection: selectionBefore, lastOp: this._lastOp})
   }
   this._lastOp = 'backspace'
@@ -522,7 +544,7 @@ InputMask.prototype.paste = function paste(input) {
     this.selection.start = this.pattern.firstEditableIndex
   }
 
-  for (var i = 0, l = input.length;
+  for (i = 0, l = input.length;
        i < l && this.selection.start <= this.pattern.lastEditableIndex;
        i++) {
     var valid = this.input(input.charAt(i))
@@ -562,9 +584,9 @@ InputMask.prototype.undo = function undo() {
     // Add a new history entry if anything has changed since the last one, so we
     // can redo back to the initial state we started undoing from.
     var value = this.getValue()
-    if (historyItem.value != value ||
-        historyItem.selection.start != this.selection.start ||
-        historyItem.selection.end != this.selection.end) {
+    if (historyItem.value !== value ||
+        historyItem.selection.start !== this.selection.start ||
+        historyItem.selection.end !== this.selection.end) {
       this._history.push({value: value, selection: copy(this.selection), lastOp: this._lastOp, startUndo: true})
     }
   }
@@ -604,7 +626,7 @@ InputMask.prototype.setPattern = function setPattern(pattern, options) {
     selection: {start: 0, end: 0},
     value: ''
   }, options)
-  this.pattern = new Pattern(pattern, this.formatCharacters)
+  this.pattern = new Pattern(pattern, this.formatCharacters, this.placeholderChar)
   this.setValue(options.value)
   this.emptyValue = this.pattern.formatValue([]).join('')
   this.selection = options.selection
@@ -634,6 +656,16 @@ InputMask.prototype.getValue = function getValue() {
   return this.value.join('')
 }
 
+InputMask.prototype.getRawValue = function getRawValue() {
+  var rawValue = []
+  for (var i = 0; i < this.value.length; i++) {
+    if (this.pattern._editableIndices[i] === true) {
+      rawValue.push(this.value[i])
+    }
+  }
+  return rawValue.join('')
+}
+
 InputMask.prototype._resetHistory = function _resetHistory() {
   this._history = []
   this._historyIndex = null
@@ -644,6 +676,7 @@ InputMask.prototype._resetHistory = function _resetHistory() {
 InputMask.Pattern = Pattern
 
 module.exports = InputMask
+
 },{}],3:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
