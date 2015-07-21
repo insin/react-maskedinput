@@ -1,7 +1,7 @@
 'use strict';
 
 var React = require('react')
-var {getSelection, setSelection} = require('react/lib/ReactInputSelection')
+var $__0=   require('react/lib/ReactInputSelection'),getSelection=$__0.getSelection,setSelection=$__0.setSelection
 
 var InputMask = require('inputmask-core')
 
@@ -16,47 +16,46 @@ function isRedo(e) {
   return (e.ctrlKey || e.metaKey) && e.keyCode === (e.shiftKey ? KEYCODE_Z : KEYCODE_Y)
 }
 
-var MaskedInput = React.createClass({
+var MaskedInput = React.createClass({displayName: "MaskedInput",
   propTypes: {
     pattern: React.PropTypes.string.isRequired,
 
-    formatCharacters: React.PropTypes.object,
-    placeholderChar: React.PropTypes.string
+    formatCharacters: React.PropTypes.object
   },
 
-  getDefaultProps() {
+  getDefaultProps:function() {
     return {
       value: ''
     }
   },
 
-  componentWillMount() {
-    var options = {
+  componentWillMount:function() {
+
+    this.mask = new InputMask({
       pattern: this.props.pattern,
       value: this.props.value,
       formatCharacters: this.props.formatCharacters
-    }
-    if (this.props.placeholderChar) {
-      options.placeholderChar = this.props.placeholderChar
-    }
-    this.mask = new InputMask(options)
+    })
   },
 
-  componentWillReceiveProps(nextProps) {
-    if (this.props.pattern !== nextProps.pattern) {
-      this.mask.setPattern(nextProps.pattern, {value: this.mask.getRawValue()})
-    }
-  },
-
-  _updateMaskSelection() {
+  _updateMaskSelection:function() {
     this.mask.selection = getSelection(this.getDOMNode())
   },
 
-  _updateInputSelection() {
+  _updateInputSelection:function() {
     setSelection(this.getDOMNode(), this.mask.selection)
   },
 
-  _onChange(e) {
+  shouldComponentUpdate: function(nextProps, nextState) {
+    this.mask = new InputMask({
+      pattern: this.props.pattern,
+      value: nextProps.value,
+      formatCharacters: this.props.formatCharacters
+    });
+    return true;
+  },
+
+  _onChange:function(e) {
     // console.log('onChange', JSON.stringify(getSelection(this.getDOMNode())), e.target.value)
 
     var maskValue = this.mask.getValue()
@@ -79,7 +78,7 @@ var MaskedInput = React.createClass({
     }
   },
 
-  _onKeyDown(e) {
+  _onKeyDown:function(e) {
     // console.log('onKeyDown', JSON.stringify(getSelection(this.getDOMNode())), e.key, e.target.value)
 
     if (isUndo(e)) {
@@ -115,7 +114,7 @@ var MaskedInput = React.createClass({
     }
   },
 
-  _onKeyPress(e) {
+  _onKeyPress:function(e) {
     // console.log('onKeyPress', JSON.stringify(getSelection(this.getDOMNode())), e.key, e.target.value)
 
     // Ignore modified key presses
@@ -130,7 +129,7 @@ var MaskedInput = React.createClass({
     }
   },
 
-  _onPaste(e) {
+  _onPaste:function(e) {
     // console.log('onPaste', JSON.stringify(getSelection(this.getDOMNode())), e.clipboardData.getData('Text'), e.target.value)
 
     e.preventDefault()
@@ -144,24 +143,24 @@ var MaskedInput = React.createClass({
     }
   },
 
-  _getDisplayValue() {
+  _getDisplayValue:function() {
     var value = this.mask.getValue()
     return value === this.mask.emptyValue ? '' : value
   },
 
-  render() {
-    var {pattern, formatCharacters, size, placeholder, ...props} = this.props
+  render:function() {
+    var $__0=      this.props,pattern=$__0.pattern,formatCharacters=$__0.formatCharacters,size=$__0.size,placeholder=$__0.placeholder,props=(function(source, exclusion) {var rest = {};var hasOwn = Object.prototype.hasOwnProperty;if (source == null) {throw new TypeError();}for (var key in source) {if (hasOwn.call(source, key) && !hasOwn.call(exclusion, key)) {rest[key] = source[key];}}return rest;})($__0,{pattern:1,formatCharacters:1,size:1,placeholder:1})
     var patternLength = this.mask.pattern.length
-    return <input {...props}
-      maxLength={patternLength}
-      onChange={this._onChange}
-      onKeyDown={this._onKeyDown}
-      onKeyPress={this._onKeyPress}
-      onPaste={this._onPaste}
-      placeholder={placeholder || this.mask.emptyValue}
-      size={size || patternLength}
-      value={this._getDisplayValue()}
-    />
+    return React.createElement("input", React.__spread({},  props,
+      {maxLength: patternLength,
+      onChange: this._onChange,
+      onKeyDown: this._onKeyDown,
+      onKeyPress: this._onKeyPress,
+      onPaste: this._onPaste,
+      placeholder: placeholder || this.mask.emptyValue,
+      size: size || patternLength,
+      value: this._getDisplayValue()})
+    )
   }
 })
 
