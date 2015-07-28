@@ -42,6 +42,25 @@ var MaskedInput = React.createClass({displayName: "MaskedInput",
     })
   },
 
+  componentWillUpdate:function(nextProps, nextState) {
+    if (nextProps.pattern !== this.props.pattern) {
+      this._updatePattern(nextProps)
+    }
+  },
+
+  componentDidUpdate:function(prevProps) {
+    if (prevProps.pattern !== this.props.pattern && this.mask.selection.start) {
+      this._updateInputSelection()
+    }
+  },
+
+  _updatePattern: function(props) {
+    this.mask.setPattern(props.pattern, {
+      value: this.mask.getRawValue(),
+      selection: getSelection(this.getDOMNode())
+    });
+  },
+
   _updateMaskSelection:function() {
     this.mask.selection = getSelection(this.getDOMNode())
   },
@@ -160,6 +179,7 @@ var MaskedInput = React.createClass({displayName: "MaskedInput",
 })
 
 module.exports = MaskedInput
+
 },{"inputmask-core":2,"react/lib/ReactInputSelection":5}],2:[function(require,module,exports){
 'use strict';
 
