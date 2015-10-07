@@ -1,11 +1,11 @@
 /*!
- * react-maskedinput 2.0.0 - https://github.com/insin/react-maskedinput
+ * react-maskedinput 2.0.0 (dev build at Wed, 07 Oct 2015 20:24:28 GMT) - https://github.com/insin/react-maskedinput
  * MIT Licensed
  */
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.MaskedInput = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
-var React = (typeof window !== "undefined" ? window.React : typeof global !== "undefined" ? global.React : null)
+var React = (typeof window !== "undefined" ? window['React'] : typeof global !== "undefined" ? global['React'] : null)
 var $__0=   require('react/lib/ReactInputSelection'),getSelection=$__0.getSelection,setSelection=$__0.setSelection
 
 var InputMask = require('inputmask-core')
@@ -25,7 +25,8 @@ var MaskedInput = React.createClass({displayName: "MaskedInput",
   propTypes: {
     pattern: React.PropTypes.string.isRequired,
 
-    formatCharacters: React.PropTypes.object
+    formatCharacters: React.PropTypes.object,
+    placeholderChar: React.PropTypes.string
   },
 
   getDefaultProps:function() {
@@ -35,23 +36,33 @@ var MaskedInput = React.createClass({displayName: "MaskedInput",
   },
 
   componentWillMount:function() {
-    this.mask = new InputMask({
+    var options = {
       pattern: this.props.pattern,
       value: this.props.value,
       formatCharacters: this.props.formatCharacters
-    })
+    }
+    if (this.props.placeholderChar) {
+      options.placeholderChar = this.props.placeholderChar
+    }
+    this.mask = new InputMask(options)
+  },
+
+  componentWillReceiveProps:function(nextProps) {
+    if (this.props.pattern !== nextProps.pattern) {
+      this.mask.setPattern(nextProps.pattern, {value: this.mask.getRawValue()})
+    }
   },
 
   _updateMaskSelection:function() {
-    this.mask.selection = getSelection(this.getDOMNode())
+    this.mask.selection = getSelection(this.input)
   },
 
   _updateInputSelection:function() {
-    setSelection(this.getDOMNode(), this.mask.selection)
+    setSelection(this.input, this.mask.selection)
   },
 
   _onChange:function(e) {
-    // console.log('onChange', JSON.stringify(getSelection(this.getDOMNode())), e.target.value)
+    // console.log('onChange', JSON.stringify(getSelection(this.input)), e.target.value)
 
     var maskValue = this.mask.getValue()
     if (e.target.value != maskValue) {
@@ -74,7 +85,7 @@ var MaskedInput = React.createClass({displayName: "MaskedInput",
   },
 
   _onKeyDown:function(e) {
-    // console.log('onKeyDown', JSON.stringify(getSelection(this.getDOMNode())), e.key, e.target.value)
+    // console.log('onKeyDown', JSON.stringify(getSelection(this.input)), e.key, e.target.value)
 
     if (isUndo(e)) {
       e.preventDefault()
@@ -110,7 +121,7 @@ var MaskedInput = React.createClass({displayName: "MaskedInput",
   },
 
   _onKeyPress:function(e) {
-    // console.log('onKeyPress', JSON.stringify(getSelection(this.getDOMNode())), e.key, e.target.value)
+    // console.log('onKeyPress', JSON.stringify(getSelection(this.input)), e.key, e.target.value)
 
     // Ignore modified key presses
     if (e.metaKey || e.altKey || e.ctrlKey) { return }
@@ -125,7 +136,7 @@ var MaskedInput = React.createClass({displayName: "MaskedInput",
   },
 
   _onPaste:function(e) {
-    // console.log('onPaste', JSON.stringify(getSelection(this.getDOMNode())), e.clipboardData.getData('Text'), e.target.value)
+    // console.log('onPaste', JSON.stringify(getSelection(this.input)), e.clipboardData.getData('Text'), e.target.value)
 
     e.preventDefault()
     this._updateMaskSelection()
@@ -147,7 +158,8 @@ var MaskedInput = React.createClass({displayName: "MaskedInput",
     var $__0=      this.props,pattern=$__0.pattern,formatCharacters=$__0.formatCharacters,size=$__0.size,placeholder=$__0.placeholder,props=(function(source, exclusion) {var rest = {};var hasOwn = Object.prototype.hasOwnProperty;if (source == null) {throw new TypeError();}for (var key in source) {if (hasOwn.call(source, key) && !hasOwn.call(exclusion, key)) {rest[key] = source[key];}}return rest;})($__0,{pattern:1,formatCharacters:1,size:1,placeholder:1})
     var patternLength = this.mask.pattern.length
     return React.createElement("input", React.__spread({},  props, 
-      {maxLength: patternLength, 
+      {ref: function(r)  {return this.input = r;}.bind(this), 
+      maxLength: patternLength, 
       onChange: this._onChange, 
       onKeyDown: this._onKeyDown, 
       onKeyPress: this._onKeyPress, 
@@ -160,8 +172,9 @@ var MaskedInput = React.createClass({displayName: "MaskedInput",
 })
 
 module.exports = MaskedInput
-},{"inputmask-core":2,"react/lib/ReactInputSelection":5}],2:[function(require,module,exports){
-'use strict';
+
+},{"inputmask-core":2,"react/lib/ReactInputSelection":4}],2:[function(require,module,exports){
+'use strict'
 
 function extend(dest, src) {
   if (src) {
@@ -200,13 +213,13 @@ function mergeFormatCharacters(formatCharacters) {
   return merged
 }
 
-var PLACEHOLDER = '_'
 var ESCAPE_CHAR = '\\'
 
 var DIGIT_RE = /^\d$/
 var LETTER_RE = /^[A-Za-z]$/
 var ALPHANNUMERIC_RE = /^[\dA-Za-z]$/
 
+var DEFAULT_PLACEHOLDER_CHAR = '_'
 var DEFAULT_FORMAT_CHARACTERS = {
   '*': {
     validate: function(char) { return ALPHANNUMERIC_RE.test(char) }
@@ -231,9 +244,13 @@ var DEFAULT_FORMAT_CHARACTERS = {
  * @param {string} source
  * @patam {?Object} formatCharacters
  */
-function Pattern(source, formatCharacters) {
-  if (!(this instanceof Pattern)) { return new Pattern(source) }
+function Pattern(source, formatCharacters, placeholderChar) {
+  if (!(this instanceof Pattern)) {
+    return new Pattern(source, formatCharacters, placeholderChar)
+  }
 
+  /** Placeholder character */
+  this.placeholderChar = placeholderChar || DEFAULT_PLACEHOLDER_CHAR
   /** Format character definitions. */
   this.formatCharacters = formatCharacters || DEFAULT_FORMAT_CHARACTERS
   /** Pattern definition string with escape characters. */
@@ -300,7 +317,7 @@ Pattern.prototype.formatValue = function format(value) {
     if (this.isEditableIndex(i)) {
       valueBuffer[i] = (value.length > valueIndex && this.isValidAtIndex(value[valueIndex], i)
                         ? this.transform(value[valueIndex], i)
-                        : PLACEHOLDER)
+                        : this.placeholderChar)
       valueIndex++
     }
     else {
@@ -344,6 +361,7 @@ function InputMask(options) {
   options = extend({
     formatCharacters: null,
     pattern: null,
+    placeholderChar: DEFAULT_PLACEHOLDER_CHAR,
     selection: {start: 0, end: 0},
     value: ''
   }, options)
@@ -352,6 +370,11 @@ function InputMask(options) {
     throw new Error('InputMask: you must provide a pattern.')
   }
 
+  if (options.placeholderChar.length !== 1) {
+    throw new Error('InputMask: placeholderChar should be a single character.')
+  }
+
+  this.placeholderChar = options.placeholderChar
   this.formatCharacters = mergeFormatCharacters(options.formatCharacters)
   this.setPattern(options.pattern, {
     value: options.value,
@@ -379,11 +402,9 @@ InputMask.prototype.input = function input(char) {
 
   var inputIndex = this.selection.start
 
-  // If a range of characters was selected and it includes the first editable
-  // character, make sure any input given is applied to it.
-  if (this.selection.start !== this.selection.end &&
-      this.selection.start < this.pattern.firstEditableIndex &&
-      this.selection.end > this.pattern.firstEditableIndex) {
+  // If the cursor or selection is prior to the first editable character, make
+  // sure any input given is applied to it.
+  if (inputIndex < this.pattern.firstEditableIndex) {
     inputIndex = this.pattern.firstEditableIndex
   }
 
@@ -400,7 +421,7 @@ InputMask.prototype.input = function input(char) {
   var end = this.selection.end - 1
   while (end > inputIndex) {
     if (this.pattern.isEditableIndex(end)) {
-      this.value[end] = PLACEHOLDER
+      this.value[end] = this.placeholderChar
     }
     end--
   }
@@ -422,9 +443,9 @@ InputMask.prototype.input = function input(char) {
     this._history.splice(this._historyIndex, this._history.length - this._historyIndex)
     this._historyIndex = null
   }
-  if (this._lastOp != 'input' ||
-      selectionBefore.start != selectionBefore.end ||
-      this._lastSelection != null && selectionBefore.start != this._lastSelection.start) {
+  if (this._lastOp !== 'input' ||
+      selectionBefore.start !== selectionBefore.end ||
+      this._lastSelection !== null && selectionBefore.start !== this._lastSelection.start) {
     this._history.push({value: valueBefore, selection: selectionBefore, lastOp: this._lastOp})
   }
   this._lastOp = 'input'
@@ -448,12 +469,10 @@ InputMask.prototype.backspace = function backspace() {
   var selectionBefore = copy(this.selection)
   var valueBefore = this.getValue()
 
-  var format
-
   // No range selected - work on the character preceding the cursor
   if (this.selection.start === this.selection.end) {
     if (this.pattern.isEditableIndex(this.selection.start - 1)) {
-      this.value[this.selection.start - 1] = PLACEHOLDER
+      this.value[this.selection.start - 1] = this.placeholderChar
     }
     this.selection.start--
     this.selection.end--
@@ -463,7 +482,7 @@ InputMask.prototype.backspace = function backspace() {
     var end = this.selection.end - 1
     while (end >= this.selection.start) {
       if (this.pattern.isEditableIndex(end)) {
-        this.value[end] = PLACEHOLDER
+        this.value[end] = this.placeholderChar
       }
       end--
     }
@@ -475,9 +494,9 @@ InputMask.prototype.backspace = function backspace() {
     // Took more input after undoing, so blow any subsequent history away
     this._history.splice(this._historyIndex, this._history.length - this._historyIndex)
   }
-  if (this._lastOp != 'backspace' ||
-      selectionBefore.start != selectionBefore.end ||
-      this._lastSelection != null && selectionBefore.start != this._lastSelection.start) {
+  if (this._lastOp !== 'backspace' ||
+      selectionBefore.start !== selectionBefore.end ||
+      this._lastSelection !== null && selectionBefore.start !== this._lastSelection.start) {
     this._history.push({value: valueBefore, selection: selectionBefore, lastOp: this._lastOp})
   }
   this._lastOp = 'backspace'
@@ -522,7 +541,7 @@ InputMask.prototype.paste = function paste(input) {
     this.selection.start = this.pattern.firstEditableIndex
   }
 
-  for (var i = 0, l = input.length;
+  for (i = 0, l = input.length;
        i < l && this.selection.start <= this.pattern.lastEditableIndex;
        i++) {
     var valid = this.input(input.charAt(i))
@@ -562,9 +581,9 @@ InputMask.prototype.undo = function undo() {
     // Add a new history entry if anything has changed since the last one, so we
     // can redo back to the initial state we started undoing from.
     var value = this.getValue()
-    if (historyItem.value != value ||
-        historyItem.selection.start != this.selection.start ||
-        historyItem.selection.end != this.selection.end) {
+    if (historyItem.value !== value ||
+        historyItem.selection.start !== this.selection.start ||
+        historyItem.selection.end !== this.selection.end) {
       this._history.push({value: value, selection: copy(this.selection), lastOp: this._lastOp, startUndo: true})
     }
   }
@@ -604,7 +623,7 @@ InputMask.prototype.setPattern = function setPattern(pattern, options) {
     selection: {start: 0, end: 0},
     value: ''
   }, options)
-  this.pattern = new Pattern(pattern, this.formatCharacters)
+  this.pattern = new Pattern(pattern, this.formatCharacters, this.placeholderChar)
   this.setValue(options.value)
   this.emptyValue = this.pattern.formatValue([]).join('')
   this.selection = options.selection
@@ -627,11 +646,24 @@ InputMask.prototype.setSelection = function setSelection(selection) {
 }
 
 InputMask.prototype.setValue = function setValue(value) {
+  if (value == null) {
+    value = ''
+  }
   this.value = this.pattern.formatValue(value.split(''))
 }
 
 InputMask.prototype.getValue = function getValue() {
   return this.value.join('')
+}
+
+InputMask.prototype.getRawValue = function getRawValue() {
+  var rawValue = []
+  for (var i = 0; i < this.value.length; i++) {
+    if (this.pattern._editableIndices[i] === true) {
+      rawValue.push(this.value[i])
+    }
+  }
+  return rawValue.join('')
 }
 
 InputMask.prototype._resetHistory = function _resetHistory() {
@@ -644,51 +676,8 @@ InputMask.prototype._resetHistory = function _resetHistory() {
 InputMask.Pattern = Pattern
 
 module.exports = InputMask
+
 },{}],3:[function(require,module,exports){
-/**
- * Copyright 2013-2015, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * @providesModule ExecutionEnvironment
- */
-
-/*jslint evil: true */
-
-"use strict";
-
-var canUseDOM = !!(
-  (typeof window !== 'undefined' &&
-  window.document && window.document.createElement)
-);
-
-/**
- * Simple, lightweight module assisting with the detection and context of
- * Worker. Helps avoid circular dependencies and allows code to reason about
- * whether or not they are in a Worker, even if they never include the main
- * `ReactWorker` dependency.
- */
-var ExecutionEnvironment = {
-
-  canUseDOM: canUseDOM,
-
-  canUseWorkers: typeof Worker !== 'undefined',
-
-  canUseEventListeners:
-    canUseDOM && !!(window.addEventListener || window.attachEvent),
-
-  canUseViewport: canUseDOM && !!window.screen,
-
-  isInWorker: !canUseDOM // For now, this is true - might change in the future.
-
-};
-
-module.exports = ExecutionEnvironment;
-
-},{}],4:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -702,10 +691,10 @@ module.exports = ExecutionEnvironment;
 
 'use strict';
 
-var ExecutionEnvironment = require("./ExecutionEnvironment");
+var ExecutionEnvironment = require('fbjs/lib/ExecutionEnvironment');
 
-var getNodeForCharacterOffset = require("./getNodeForCharacterOffset");
-var getTextContentAccessor = require("./getTextContentAccessor");
+var getNodeForCharacterOffset = require('./getNodeForCharacterOffset');
+var getTextContentAccessor = require('./getTextContentAccessor');
 
 /**
  * While `isCollapsed` is available on the Selection object and `collapsed`
@@ -767,15 +756,26 @@ function getModernOffsets(node) {
 
   var currentRange = selection.getRangeAt(0);
 
+  // In Firefox, range.startContainer and range.endContainer can be "anonymous
+  // divs", e.g. the up/down buttons on an <input type="number">. Anonymous
+  // divs do not seem to expose properties, triggering a "Permission denied
+  // error" if any of its properties are accessed. The only seemingly possible
+  // way to avoid erroring is to access a property that typically works for
+  // non-anonymous divs and catch any error that may otherwise arise. See
+  // https://bugzilla.mozilla.org/show_bug.cgi?id=208427
+  try {
+    /* eslint-disable no-unused-expressions */
+    currentRange.startContainer.nodeType;
+    currentRange.endContainer.nodeType;
+    /* eslint-enable no-unused-expressions */
+  } catch (e) {
+    return null;
+  }
+
   // If the node and offset values are the same, the selection is collapsed.
   // `Selection.isCollapsed` is available natively, but IE sometimes gets
   // this value wrong.
-  var isSelectionCollapsed = isCollapsed(
-    selection.anchorNode,
-    selection.anchorOffset,
-    selection.focusNode,
-    selection.focusOffset
-  );
+  var isSelectionCollapsed = isCollapsed(selection.anchorNode, selection.anchorOffset, selection.focusNode, selection.focusOffset);
 
   var rangeLength = isSelectionCollapsed ? 0 : currentRange.toString().length;
 
@@ -783,12 +783,7 @@ function getModernOffsets(node) {
   tempRange.selectNodeContents(node);
   tempRange.setEnd(currentRange.startContainer, currentRange.startOffset);
 
-  var isTempRangeCollapsed = isCollapsed(
-    tempRange.startContainer,
-    tempRange.startOffset,
-    tempRange.endContainer,
-    tempRange.endOffset
-  );
+  var isTempRangeCollapsed = isCollapsed(tempRange.startContainer, tempRange.startOffset, tempRange.endContainer, tempRange.endOffset);
 
   var start = isTempRangeCollapsed ? 0 : tempRange.toString().length;
   var end = start + rangeLength;
@@ -851,8 +846,7 @@ function setModernOffsets(node, offsets) {
   var selection = window.getSelection();
   var length = node[getTextContentAccessor()].length;
   var start = Math.min(offsets.start, length);
-  var end = typeof offsets.end === 'undefined' ?
-            start : Math.min(offsets.end, length);
+  var end = typeof offsets.end === 'undefined' ? start : Math.min(offsets.end, length);
 
   // IE 11 uses modern selection, but doesn't support the extend method.
   // Flip backward selections, so we can set with a single range.
@@ -880,11 +874,7 @@ function setModernOffsets(node, offsets) {
   }
 }
 
-var useIEOffsets = (
-  ExecutionEnvironment.canUseDOM &&
-  'selection' in document &&
-  !('getSelection' in window)
-);
+var useIEOffsets = ExecutionEnvironment.canUseDOM && 'selection' in document && !('getSelection' in window);
 
 var ReactDOMSelection = {
   /**
@@ -900,8 +890,7 @@ var ReactDOMSelection = {
 };
 
 module.exports = ReactDOMSelection;
-
-},{"./ExecutionEnvironment":3,"./getNodeForCharacterOffset":9,"./getTextContentAccessor":10}],5:[function(require,module,exports){
+},{"./getNodeForCharacterOffset":5,"./getTextContentAccessor":6,"fbjs/lib/ExecutionEnvironment":7}],4:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -915,11 +904,11 @@ module.exports = ReactDOMSelection;
 
 'use strict';
 
-var ReactDOMSelection = require("./ReactDOMSelection");
+var ReactDOMSelection = require('./ReactDOMSelection');
 
-var containsNode = require("./containsNode");
-var focusNode = require("./focusNode");
-var getActiveElement = require("./getActiveElement");
+var containsNode = require('fbjs/lib/containsNode');
+var focusNode = require('fbjs/lib/focusNode');
+var getActiveElement = require('fbjs/lib/getActiveElement');
 
 function isInDocument(node) {
   return containsNode(document.documentElement, node);
@@ -933,21 +922,16 @@ function isInDocument(node) {
  */
 var ReactInputSelection = {
 
-  hasSelectionCapabilities: function(elem) {
-    return elem && (
-      ((elem.nodeName === 'INPUT' && elem.type === 'text') ||
-      elem.nodeName === 'TEXTAREA' || elem.contentEditable === 'true')
-    );
+  hasSelectionCapabilities: function (elem) {
+    var nodeName = elem && elem.nodeName && elem.nodeName.toLowerCase();
+    return nodeName && (nodeName === 'input' && elem.type === 'text' || nodeName === 'textarea' || elem.contentEditable === 'true');
   },
 
-  getSelectionInformation: function() {
+  getSelectionInformation: function () {
     var focusedElem = getActiveElement();
     return {
       focusedElem: focusedElem,
-      selectionRange:
-          ReactInputSelection.hasSelectionCapabilities(focusedElem) ?
-          ReactInputSelection.getSelection(focusedElem) :
-          null
+      selectionRange: ReactInputSelection.hasSelectionCapabilities(focusedElem) ? ReactInputSelection.getSelection(focusedElem) : null
     };
   },
 
@@ -956,17 +940,13 @@ var ReactInputSelection = {
    * restore it. This is useful when performing operations that could remove dom
    * nodes and place them back in, resulting in focus being lost.
    */
-  restoreSelection: function(priorSelectionInformation) {
+  restoreSelection: function (priorSelectionInformation) {
     var curFocusedElem = getActiveElement();
     var priorFocusedElem = priorSelectionInformation.focusedElem;
     var priorSelectionRange = priorSelectionInformation.selectionRange;
-    if (curFocusedElem !== priorFocusedElem &&
-        isInDocument(priorFocusedElem)) {
+    if (curFocusedElem !== priorFocusedElem && isInDocument(priorFocusedElem)) {
       if (ReactInputSelection.hasSelectionCapabilities(priorFocusedElem)) {
-        ReactInputSelection.setSelection(
-          priorFocusedElem,
-          priorSelectionRange
-        );
+        ReactInputSelection.setSelection(priorFocusedElem, priorSelectionRange);
       }
       focusNode(priorFocusedElem);
     }
@@ -978,7 +958,7 @@ var ReactInputSelection = {
    * -@input: Look up selection bounds of this input
    * -@return {start: selectionStart, end: selectionEnd}
    */
-  getSelection: function(input) {
+  getSelection: function (input) {
     var selection;
 
     if ('selectionStart' in input) {
@@ -987,7 +967,7 @@ var ReactInputSelection = {
         start: input.selectionStart,
         end: input.selectionEnd
       };
-    } else if (document.selection && input.nodeName === 'INPUT') {
+    } else if (document.selection && (input.nodeName && input.nodeName.toLowerCase() === 'input')) {
       // IE8 input.
       var range = document.selection.createRange();
       // There can only be one selection per document in IE, so it must
@@ -1003,7 +983,7 @@ var ReactInputSelection = {
       selection = ReactDOMSelection.getOffsets(input);
     }
 
-    return selection || {start: 0, end: 0};
+    return selection || { start: 0, end: 0 };
   },
 
   /**
@@ -1012,7 +992,7 @@ var ReactInputSelection = {
    * -@input     Set selection bounds of this input or textarea
    * -@offsets   Object of same form that is returned from get*
    */
-  setSelection: function(input, offsets) {
+  setSelection: function (input, offsets) {
     var start = offsets.start;
     var end = offsets.end;
     if (typeof end === 'undefined') {
@@ -1022,7 +1002,7 @@ var ReactInputSelection = {
     if ('selectionStart' in input) {
       input.selectionStart = start;
       input.selectionEnd = Math.min(end, input.value.length);
-    } else if (document.selection && input.nodeName === 'INPUT') {
+    } else if (document.selection && (input.nodeName && input.nodeName.toLowerCase() === 'input')) {
       var range = input.createTextRange();
       range.collapse(true);
       range.moveStart('character', start);
@@ -1035,110 +1015,7 @@ var ReactInputSelection = {
 };
 
 module.exports = ReactInputSelection;
-
-},{"./ReactDOMSelection":4,"./containsNode":6,"./focusNode":7,"./getActiveElement":8}],6:[function(require,module,exports){
-/**
- * Copyright 2013-2015, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * @providesModule containsNode
- * @typechecks
- */
-
-var isTextNode = require("./isTextNode");
-
-/*jslint bitwise:true */
-
-/**
- * Checks if a given DOM node contains or is another DOM node.
- *
- * @param {?DOMNode} outerNode Outer DOM node.
- * @param {?DOMNode} innerNode Inner DOM node.
- * @return {boolean} True if `outerNode` contains or is `innerNode`.
- */
-function containsNode(outerNode, innerNode) {
-  if (!outerNode || !innerNode) {
-    return false;
-  } else if (outerNode === innerNode) {
-    return true;
-  } else if (isTextNode(outerNode)) {
-    return false;
-  } else if (isTextNode(innerNode)) {
-    return containsNode(outerNode, innerNode.parentNode);
-  } else if (outerNode.contains) {
-    return outerNode.contains(innerNode);
-  } else if (outerNode.compareDocumentPosition) {
-    return !!(outerNode.compareDocumentPosition(innerNode) & 16);
-  } else {
-    return false;
-  }
-}
-
-module.exports = containsNode;
-
-},{"./isTextNode":12}],7:[function(require,module,exports){
-/**
- * Copyright 2014-2015, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * @providesModule focusNode
- */
-
-"use strict";
-
-/**
- * @param {DOMElement} node input/textarea to focus
- */
-function focusNode(node) {
-  // IE8 can throw "Can't move focus to the control because it is invisible,
-  // not enabled, or of a type that does not accept the focus." for all kinds of
-  // reasons that are too expensive and fragile to test.
-  try {
-    node.focus();
-  } catch(e) {
-  }
-}
-
-module.exports = focusNode;
-
-},{}],8:[function(require,module,exports){
-/**
- * Copyright 2013-2015, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * @providesModule getActiveElement
- * @typechecks
- */
-
-/**
- * Same as document.activeElement but wraps in a try-catch block. In IE it is
- * not safe to call document.activeElement if there is nothing focused.
- *
- * The activeElement will be null only if the document body is not yet defined.
- */
-function getActiveElement() /*?DOMElement*/ {
-  try {
-    return document.activeElement || document.body;
-  } catch (e) {
-    return document.body;
-  }
-}
-
-module.exports = getActiveElement;
-
-},{}],9:[function(require,module,exports){
+},{"./ReactDOMSelection":3,"fbjs/lib/containsNode":8,"fbjs/lib/focusNode":9,"fbjs/lib/getActiveElement":10}],5:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -1212,8 +1089,7 @@ function getNodeForCharacterOffset(root, offset) {
 }
 
 module.exports = getNodeForCharacterOffset;
-
-},{}],10:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -1227,7 +1103,7 @@ module.exports = getNodeForCharacterOffset;
 
 'use strict';
 
-var ExecutionEnvironment = require("./ExecutionEnvironment");
+var ExecutionEnvironment = require('fbjs/lib/ExecutionEnvironment');
 
 var contentKey = null;
 
@@ -1241,16 +1117,167 @@ function getTextContentAccessor() {
   if (!contentKey && ExecutionEnvironment.canUseDOM) {
     // Prefer textContent to innerText because many browsers support both but
     // SVG <text> elements don't support innerText even when <div> does.
-    contentKey = 'textContent' in document.documentElement ?
-      'textContent' :
-      'innerText';
+    contentKey = 'textContent' in document.documentElement ? 'textContent' : 'innerText';
   }
   return contentKey;
 }
 
 module.exports = getTextContentAccessor;
+},{"fbjs/lib/ExecutionEnvironment":7}],7:[function(require,module,exports){
+/**
+ * Copyright 2013-2015, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * @providesModule ExecutionEnvironment
+ */
 
-},{"./ExecutionEnvironment":3}],11:[function(require,module,exports){
+'use strict';
+
+var canUseDOM = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
+
+/**
+ * Simple, lightweight module assisting with the detection and context of
+ * Worker. Helps avoid circular dependencies and allows code to reason about
+ * whether or not they are in a Worker, even if they never include the main
+ * `ReactWorker` dependency.
+ */
+var ExecutionEnvironment = {
+
+  canUseDOM: canUseDOM,
+
+  canUseWorkers: typeof Worker !== 'undefined',
+
+  canUseEventListeners: canUseDOM && !!(window.addEventListener || window.attachEvent),
+
+  canUseViewport: canUseDOM && !!window.screen,
+
+  isInWorker: !canUseDOM // For now, this is true - might change in the future.
+
+};
+
+module.exports = ExecutionEnvironment;
+},{}],8:[function(require,module,exports){
+/**
+ * Copyright 2013-2015, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * @providesModule containsNode
+ * @typechecks
+ */
+
+'use strict';
+
+var isTextNode = require('./isTextNode');
+
+/*eslint-disable no-bitwise */
+
+/**
+ * Checks if a given DOM node contains or is another DOM node.
+ *
+ * @param {?DOMNode} outerNode Outer DOM node.
+ * @param {?DOMNode} innerNode Inner DOM node.
+ * @return {boolean} True if `outerNode` contains or is `innerNode`.
+ */
+function containsNode(_x, _x2) {
+  var _again = true;
+
+  _function: while (_again) {
+    var outerNode = _x,
+        innerNode = _x2;
+    _again = false;
+
+    if (!outerNode || !innerNode) {
+      return false;
+    } else if (outerNode === innerNode) {
+      return true;
+    } else if (isTextNode(outerNode)) {
+      return false;
+    } else if (isTextNode(innerNode)) {
+      _x = outerNode;
+      _x2 = innerNode.parentNode;
+      _again = true;
+      continue _function;
+    } else if (outerNode.contains) {
+      return outerNode.contains(innerNode);
+    } else if (outerNode.compareDocumentPosition) {
+      return !!(outerNode.compareDocumentPosition(innerNode) & 16);
+    } else {
+      return false;
+    }
+  }
+}
+
+module.exports = containsNode;
+},{"./isTextNode":12}],9:[function(require,module,exports){
+/**
+ * Copyright 2013-2015, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * @providesModule focusNode
+ */
+
+'use strict';
+
+/**
+ * @param {DOMElement} node input/textarea to focus
+ */
+function focusNode(node) {
+  // IE8 can throw "Can't move focus to the control because it is invisible,
+  // not enabled, or of a type that does not accept the focus." for all kinds of
+  // reasons that are too expensive and fragile to test.
+  try {
+    node.focus();
+  } catch (e) {}
+}
+
+module.exports = focusNode;
+},{}],10:[function(require,module,exports){
+/**
+ * Copyright 2013-2015, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * @providesModule getActiveElement
+ * @typechecks
+ */
+
+/**
+ * Same as document.activeElement but wraps in a try-catch block. In IE it is
+ * not safe to call document.activeElement if there is nothing focused.
+ *
+ * The activeElement will be null only if the document or document body is not yet defined.
+ */
+'use strict';
+
+function getActiveElement() /*?DOMElement*/{
+  if (typeof document === 'undefined') {
+    return null;
+  }
+
+  try {
+    return document.activeElement || document.body;
+  } catch (e) {
+    return document.body;
+  }
+}
+
+module.exports = getActiveElement;
+},{}],11:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -1267,16 +1294,13 @@ module.exports = getTextContentAccessor;
  * @param {*} object The object to check.
  * @return {boolean} Whether or not the object is a DOM node.
  */
+'use strict';
+
 function isNode(object) {
-  return !!(object && (
-    ((typeof Node === 'function' ? object instanceof Node : typeof object === 'object' &&
-    typeof object.nodeType === 'number' &&
-    typeof object.nodeName === 'string'))
-  ));
+  return !!(object && (typeof Node === 'function' ? object instanceof Node : typeof object === 'object' && typeof object.nodeType === 'number' && typeof object.nodeName === 'string'));
 }
 
 module.exports = isNode;
-
 },{}],12:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -1290,7 +1314,9 @@ module.exports = isNode;
  * @typechecks
  */
 
-var isNode = require("./isNode");
+'use strict';
+
+var isNode = require('./isNode');
 
 /**
  * @param {*} object The object to check.
@@ -1301,6 +1327,5 @@ function isTextNode(object) {
 }
 
 module.exports = isTextNode;
-
 },{"./isNode":11}]},{},[1])(1)
 });

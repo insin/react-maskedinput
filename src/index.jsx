@@ -49,15 +49,15 @@ var MaskedInput = React.createClass({
   },
 
   _updateMaskSelection() {
-    this.mask.selection = getSelection(this.getDOMNode())
+    this.mask.selection = getSelection(this.input)
   },
 
   _updateInputSelection() {
-    setSelection(this.getDOMNode(), this.mask.selection)
+    setSelection(this.input, this.mask.selection)
   },
 
   _onChange(e) {
-    // console.log('onChange', JSON.stringify(getSelection(this.getDOMNode())), e.target.value)
+    // console.log('onChange', JSON.stringify(getSelection(this.input)), e.target.value)
 
     var maskValue = this.mask.getValue()
     if (e.target.value != maskValue) {
@@ -80,7 +80,7 @@ var MaskedInput = React.createClass({
   },
 
   _onKeyDown(e) {
-    // console.log('onKeyDown', JSON.stringify(getSelection(this.getDOMNode())), e.key, e.target.value)
+    // console.log('onKeyDown', JSON.stringify(getSelection(this.input)), e.key, e.target.value)
 
     if (isUndo(e)) {
       e.preventDefault()
@@ -116,7 +116,7 @@ var MaskedInput = React.createClass({
   },
 
   _onKeyPress(e) {
-    // console.log('onKeyPress', JSON.stringify(getSelection(this.getDOMNode())), e.key, e.target.value)
+    // console.log('onKeyPress', JSON.stringify(getSelection(this.input)), e.key, e.target.value)
 
     // Ignore modified key presses
     if (e.metaKey || e.altKey || e.ctrlKey) { return }
@@ -131,7 +131,7 @@ var MaskedInput = React.createClass({
   },
 
   _onPaste(e) {
-    // console.log('onPaste', JSON.stringify(getSelection(this.getDOMNode())), e.clipboardData.getData('Text'), e.target.value)
+    // console.log('onPaste', JSON.stringify(getSelection(this.input)), e.clipboardData.getData('Text'), e.target.value)
 
     e.preventDefault()
     this._updateMaskSelection()
@@ -153,6 +153,7 @@ var MaskedInput = React.createClass({
     var {pattern, formatCharacters, size, placeholder, ...props} = this.props
     var patternLength = this.mask.pattern.length
     return <input {...props}
+      ref={r => this.input = r }
       maxLength={patternLength}
       onChange={this._onChange}
       onKeyDown={this._onKeyDown}
