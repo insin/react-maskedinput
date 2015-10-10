@@ -119,7 +119,8 @@ var MaskedInput = React.createClass({
     // console.log('onKeyPress', JSON.stringify(getSelection(this.getDOMNode())), e.key, e.target.value)
 
     // Ignore modified key presses
-    if (e.metaKey || e.altKey || e.ctrlKey) { return }
+    // Ignore enter key to allow form submission
+    if (e.metaKey || e.altKey || e.ctrlKey || e.key == 'Enter') { return }
 
     e.preventDefault()
     this._updateMaskSelection()
