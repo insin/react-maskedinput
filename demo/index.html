@@ -72,6 +72,7 @@ var App = React.createClass({
       leading: '',
       custom: '',
       changing: '',
+      phone: '',
       pattern: '1111 1111'
     }
   },
@@ -111,6 +112,10 @@ var App = React.createClass({
       <div className="form-field">
         <label htmlFor="plate">License Plate:</label>
         <MaskedInput mask="AAA 1111" name="plate" id="plate" onChange={this._onChange} placeholder="ABC 1234"/>
+      </div>
+      <div className="form-field">
+        <label htmlFor="phone">Phone Number:</label>
+        <MaskedInput mask="(111) 111-1111" name="phone" id="phone" onChange={this._onChange} placeholder="(999) 999-9999"/>
       </div>
       <p>Mask placeholder characters can be escaped with a leading <code>\</code> to use them as static contents:</p>
       <div className="form-field">
