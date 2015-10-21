@@ -68,6 +68,7 @@ var MaskedInput = React.createClass({
         this.mask.selection.end = this.mask.selection.start + sizeDiff
         this.mask.backspace()
       }
+      this.mask.setValue(e.target.value);
       var value = this._getDisplayValue()
       e.target.value = value
       if (value) {
@@ -141,6 +142,14 @@ var MaskedInput = React.createClass({
       // Timeout needed for IE
       setTimeout(this._updateInputSelection, 0)
       this.props.onChange(e)
+    }
+    else {
+      this.mask.setValue(e.clipboardData.getData('Text'));
+      var value = this._getDisplayValue()
+      e.target.value = value
+      if (value) {
+        this._updateInputSelection()
+      }
     }
   },
 
