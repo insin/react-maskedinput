@@ -52,7 +52,7 @@
 </head>
 <body>
 <div id="app"></div>
-<script type="text/jsx;harmony=true">void function() { 'use strict';
+<script type="text/jsx;harmony=true">void function() { 'use strict'
 
 var PATTERNS = [
   '1111 1111',
@@ -92,35 +92,35 @@ var App = React.createClass({
       <p className="lead">A React component which creates a masked <code>&lt;input/&gt;</code></p>
       <div className="form-field">
         <label htmlFor="card">Card Number:</label>
-        <MaskedInput pattern="1111 1111 1111 1111" name="card" id="card" size="20" onChange={this._onChange}/>
+        <MaskedInput mask="1111 1111 1111 1111" name="card" id="card" size="20" onChange={this._onChange}/>
       </div>
       <p>Placeholders are automatically generated but can be overridden with your own:</p>
       <div className="form-field">
         <label htmlFor="expiry">Expiry Date:</label>
-        <MaskedInput pattern="11/1111" name="expiry" id="expiry" placeholder="mm/yyyy" onChange={this._onChange}/>
+        <MaskedInput mask="11/1111" name="expiry" id="expiry" placeholder="mm/yyyy" onChange={this._onChange}/>
       </div>
       <div className="form-field">
         <label htmlFor="ccv">CCV:</label>
-        <MaskedInput pattern="111" name="ccv" id="ccv" onChange={this._onChange}/>
+        <MaskedInput mask="111" name="ccv" id="ccv" onChange={this._onChange}/>
       </div>
       <div className="form-field">
         <label htmlFor="plate">License Plate:</label>
-        <MaskedInput pattern="AAA 1111" name="plate" id="plate" onChange={this._onChange} placeholder="ABC 1234"/>
+        <MaskedInput mask="AAA 1111" name="plate" id="plate" onChange={this._onChange} placeholder="ABC 1234"/>
       </div>
       <p>Mask placeholder characters can be escaped with a leading <code>\</code> to use them as static contents:</p>
       <div className="form-field">
         <label htmlFor="escaped">Escaped:</label>
-        <MaskedInput pattern="11 \* 11" name="escaped" id="escaped" onChange={this._onChange}/>
+        <MaskedInput mask="11 \* 11" name="escaped" id="escaped" onChange={this._onChange}/>
       </div>
       <p>Leading static characters:</p>
       <div className="form-field">
         <label htmlFor="leading">Leading:</label>
-        <MaskedInput pattern="(0) 111 1111" name="leading" id="leading" onChange={this._onChange}/>
+        <MaskedInput mask="(0) 111 1111" name="leading" id="leading" onChange={this._onChange}/>
       </div>
       <p>Changing patterns:</p>
       <div className="form-field">
         <label htmlFor="changing">Input:</label>
-        <MaskedInput pattern={this.state.pattern} name="changing" id="changing" onChange={this._onChange}/>
+        <MaskedInput mask={this.state.pattern} name="changing" id="changing" onChange={this._onChange}/>
       </div>
       <div className="form-field">
         <label htmlFor="pattern">Pattern:</label>
@@ -144,7 +144,7 @@ var App = React.createClass({
 var CustomInput = React.createClass({
   render() {
     return <MaskedInput
-      pattern="1111-WW-11"
+      mask="1111-WW-11"
       placeholder="1234-WW-12"
       placeholderChar=" "
       size="11"
