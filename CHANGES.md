@@ -1,3 +1,5 @@
+**Breaking change:** Now uses a `mask` prop to define the input mask instead of `pattern`, to avoid preventing use of the the HTML5 `pattern` attribute in conjunction with the input mask.
+
 **Breaking change:** React >= 0.14 is now required.
 
 React 0.14 compatibility. [[jquense][jquense]]
