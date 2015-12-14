@@ -56,6 +56,10 @@ var MaskedInput = React.createClass({
     setSelection(this.input, this.mask.selection)
   },
 
+  clear() {
+    this.mask.setValue('');
+  },
+
   _onChange(e) {
     // console.log('onChange', JSON.stringify(getSelection(this.input)), e.target.value)
 
