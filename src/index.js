@@ -1,4 +1,3 @@
-'use strict';
 
 var React = require('react')
 var {getSelection, setSelection} = require('react/lib/ReactInputSelection')
@@ -16,7 +15,7 @@ function isRedo(e) {
   return (e.ctrlKey || e.metaKey) && e.keyCode === (e.shiftKey ? KEYCODE_Z : KEYCODE_Y)
 }
 
-var MaskedInput = React.createClass({
+var MaskedInput = React.createClass({displayName: "MaskedInput",
   propTypes: {
     mask: React.PropTypes.string.isRequired,
 
@@ -152,17 +151,17 @@ var MaskedInput = React.createClass({
   render() {
     var {mask, formatCharacters, size, placeholder, ...props} = this.props
     var patternLength = this.mask.pattern.length
-    return <input {...props}
-      ref={r => this.input = r }
-      maxLength={patternLength}
-      onChange={this._onChange}
-      onKeyDown={this._onKeyDown}
-      onKeyPress={this._onKeyPress}
-      onPaste={this._onPaste}
-      placeholder={placeholder || this.mask.emptyValue}
-      size={size || patternLength}
-      value={this._getDisplayValue()}
-    />
+    return React.createElement("input", React.__spread({},  props, 
+      {ref: r => this.input = r, 
+      maxLength: patternLength, 
+      onChange: this._onChange, 
+      onKeyDown: this._onKeyDown, 
+      onKeyPress: this._onKeyPress, 
+      onPaste: this._onPaste, 
+      placeholder: placeholder || this.mask.emptyValue, 
+      size: size || patternLength, 
+      value: this._getDisplayValue()})
+    )
   }
 })
 
