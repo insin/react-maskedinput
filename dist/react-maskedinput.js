@@ -1,5 +1,5 @@
 /*!
- * react-maskedinput 3.0.0 - https://github.com/insin/react-maskedinput
+ * react-maskedinput 3.0.0 (dev build at Fri, 23 Oct 2015 15:34:02 GMT) - https://github.com/insin/react-maskedinput
  * MIT Licensed
  */
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.MaskedInput = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -73,6 +73,7 @@ var MaskedInput = React.createClass({displayName: "MaskedInput",
         this.mask.selection.end = this.mask.selection.start + sizeDiff
         this.mask.backspace()
       }
+      this.mask.setValue(e.target.value);
       var value = this._getDisplayValue()
       e.target.value = value
       if (value) {
@@ -146,6 +147,14 @@ var MaskedInput = React.createClass({displayName: "MaskedInput",
       // Timeout needed for IE
       setTimeout(this._updateInputSelection, 0)
       this.props.onChange(e)
+    }
+    else {
+      this.mask.setValue(e.clipboardData.getData('Text'));
+      var value = this._getDisplayValue()
+      e.target.value = value
+      if (value) {
+        this._updateInputSelection()
+      }
     }
   },
 
