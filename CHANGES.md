@@ -1,3 +1,7 @@
+## 3.1.0 / 2015-10-23
+
+* Added support for `value` behaving as a controlled component.
+
 ## 3.0.0 / 2015-10-23
 
 **Breaking change:** Now uses a `mask` prop to define the input mask instead of `pattern`, to avoid preventing use of the the HTML5 `pattern` attribute in conjunction with the input mask.
