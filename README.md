@@ -20,7 +20,8 @@ npm install react-maskedinput --save
 
 The browser bundle exposes a global `MaskedInput` variable and expects to find a global `React` (>= 0.14.0) variable to work with.
 
-You can find it in the [/dist directory](https://github.com/insin/react-maskedinput/tree/master/dist).
+* [react-maskedinput.js](https://npmcdn.com/react-maskedinput/umd/react-maskedinput.js) (development version)
+* [react-maskedinput.min.js](https://npmcdn.com/react-maskedinput/umd/react-maskedinput.min.js) (compressed production version)
 
 ## Usage
 
@@ -129,5 +130,35 @@ Any other props passed in will be passed as props to the rendered `<input>`, exc
 
 * `maxLength` - will always be equal to the pattern's `.length`
 * `onKeyDown`, `onKeyPress` & `onPaste` - will each trigger a call to `onChange` when necessary
+
+## Collaborating on this React component:
+
+### Prerequisites
+
+You will need the following things properly installed on your computer.
+
+* [Git](http://git-scm.com/)
+* [Node.js](http://nodejs.org/) (with npm)
+* [nwb](https://github.com/insin/nwb/) - `npm install -g nwb`
+
+### Installation
+
+* `git clone https://github.com/insin/react-maskedinput.git` this repository
+* change into the new directory
+* `npm install`
+
+### Running / Development
+
+* `nwb serve` will run the component's demo app
+* Visit the demo at [http://localhost:3000](http://localhost:3000)
+
+#### Running Tests
+
+* `nwb test` will run the tests once
+* `nwb test --server` will run the tests on every change
+
+#### Building
+
+* `nwb build`
 
 ## MIT Licensed
