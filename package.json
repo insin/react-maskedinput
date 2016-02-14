@@ -22,6 +22,7 @@
   "scripts": {
     "build": "nwb build",
     "clean": "nwb clean",
+    "lint": "eslint src",
     "start": "nwb serve",
     "test": "nwb test"
   },
@@ -32,6 +33,7 @@
     "react": "0.14.x"
   },
   "devDependencies": {
+    "eslint-config-jonnybuchanan": "2.0.3",
     "nwb": "0.7.x",
     "react": "0.14.x",
     "react-dom": "0.14.x"
