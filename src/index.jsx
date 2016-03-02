@@ -23,7 +23,7 @@ var MaskedInput = React.createClass({
     formatCharacters: React.PropTypes.object,
     placeholderChar: React.PropTypes.string
   },
-
+  keyPressDetected:false,
   getDefaultProps() {
     return {
       value: ''
@@ -61,7 +61,10 @@ var MaskedInput = React.createClass({
 
   _onChange(e) {
     // console.log('onChange', JSON.stringify(getSelection(this.input)), e.target.value)
-
+    if(!this.keyPressDetected && this.props.onKeypressDetectionFailed){
+      this.props.onKeypressDetectionFailed(e.target.value);
+      return;
+    }
     var maskValue = this.mask.getValue()
     if (e.target.value != maskValue) {
       // Cut or delete operations will have shortened the value
@@ -120,7 +123,7 @@ var MaskedInput = React.createClass({
 
   _onKeyPress(e) {
     // console.log('onKeyPress', JSON.stringify(getSelection(this.input)), e.key, e.target.value)
-
+    this.keyPressDetected=true
     // Ignore modified key presses
     // Ignore enter key to allow form submission
     if (e.metaKey || e.altKey || e.ctrlKey || e.key == 'Enter') { return }
