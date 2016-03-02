@@ -1,6 +1,27 @@
+## 3.1.0 / 2015-10-23
+
+* Added support for `value` behaving as a controlled component.
+
+## 3.0.0 / 2015-10-23
+
+**Breaking change:** Now uses a `mask` prop to define the input mask instead of `pattern`, to avoid preventing use of the the HTML5 `pattern` attribute in conjunction with the input mask.
+
+**Breaking change:** React >= 0.14 is now required.
+
+React 0.14 compatibility. [[jquense][jquense]]
+
+Updated to [inputmask-core@2.1.1](https://github.com/insin/inputmask-core/blob/master/CHANGES.md#211--2015-09-11)
+
+Updates based on [inputmask-core@2.1.0](https://github.com/insin/inputmask-core/blob/master/CHANGES.md#210--2015-07-15):
+
+* Added `placeholderChar` prop to configure the placeholder character.
+* The mask's pattern is now changed if the `pattern` prop changes - the user's input so far is replayed with the new pattern (with mixed results - TBD).
+
+UMD build is now available via npm in `dist/`. [[muffinresearch][muffinresearch]]
+
 ## 2.0.0 / 2015-04-07
 
-Updated to [inputmask-core@2.0.0](https://github.com/insin/inputmask-core/blob/master/CHANGES.md#200--2015-04-03)
+**Breaking change:** [inputmask-core@2.0.0](https://github.com/insin/inputmask-core/blob/master/CHANGES.md#200--2015-04-03) is now required.
 
 Added undo/redo when Ctrl/Command + Z/Y are used.
 
@@ -8,8 +29,7 @@ Added undo/redo when Ctrl/Command + Z/Y are used.
 
 Updated to [inputmask-core@1.2.0](https://github.com/insin/inputmask-core/blob/master/CHANGES.md#120--2015-03-26)
 
-A `formatCharacters` prop can now be passed to configure input mask format
-characters.
+A `formatCharacters` prop can now be passed to configure input mask format characters.
 
 ## 1.0.0 / 2015-03-25
 
@@ -23,3 +43,6 @@ Initial release features:
   * Editing operations can handle text selections
   * Tested in latest versions of Firefox, Chrome, Opera and IE
 * Placeholder generation and display when the mask has no user input
+
+[jquense]: https://github.com/jquense
+[muffinresearch]: https://github.com/muffinresearch
