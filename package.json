@@ -24,7 +24,8 @@
     "clean": "nwb clean",
     "lint": "eslint src",
     "start": "nwb serve",
-    "test": "nwb test"
+    "test": "nwb test",
+    "test:watch": "nwb test --server"
   },
   "dependencies": {
     "inputmask-core": "^2.1.1"
@@ -34,7 +35,7 @@
   },
   "devDependencies": {
     "eslint-config-jonnybuchanan": "2.0.3",
-    "nwb": "0.7.x",
+    "nwb": "0.8.x",
     "react": "0.14.x",
     "react-dom": "0.14.x"
   },
