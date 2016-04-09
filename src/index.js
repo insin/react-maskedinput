@@ -17,7 +17,7 @@ function isRedo(e) {
 var MaskedInput = React.createClass({
   propTypes: {
     mask: React.PropTypes.string.isRequired,
-
+    maxLength: React.PropTypes.string.number,
     formatCharacters: React.PropTypes.object,
     placeholderChar: React.PropTypes.string
   },
@@ -152,17 +152,17 @@ var MaskedInput = React.createClass({
   },
 
   render() {
-    var {mask, formatCharacters, size, placeholder, ...props} = this.props
+    var {mask, formatCharacters, size, placeholder, maxLength, ...props} = this.props
     var patternLength = this.mask.pattern.length
     return <input {...props}
       ref={r => this.input = r }
-      maxLength={patternLength}
+      maxLength={maxLength === null? maxLength: maxLength || patternLength}
       onChange={this._onChange}
       onKeyDown={this._onKeyDown}
       onKeyPress={this._onKeyPress}
       onPaste={this._onPaste}
       placeholder={placeholder || this.mask.emptyValue}
-      size={size || patternLength}
+      size={size === null? size: size || patternLength}
       value={this._getDisplayValue()}
     />
   }
