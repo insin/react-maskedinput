@@ -153,13 +153,13 @@ var MaskedInput = React.createClass({
   },
 
   _onFocus(e) {
-    e.target.setAttribute('placeholder', this.props.placeholder || this.mask.emptyValue);
-    this.props.onFocus && this.props.onFocus(e);
+    e.target.setAttribute('placeholder', this.props.placeholder || this.mask.emptyValue)
+    this.props.onFocus && this.props.onFocus(e)
   },
 
   _onBlur(e) {
-    e.target.setAttribute('placeholder', this.props.onlyFocusPlaceholder? '': this.props.placeholder || this.mask.emptyValue);
-    this.props.onBlur && this.props.onBlur(e);
+    e.target.setAttribute('placeholder', this.props.onlyFocusPlaceholder ? '' : this.props.placeholder || this.mask.emptyValue)
+    this.props.onBlur && this.props.onBlur(e)
   },
 
   render() {
@@ -167,15 +167,15 @@ var MaskedInput = React.createClass({
     var patternLength = this.mask.pattern.length
     return <input {...props}
       ref={r => this.input = r }
-      maxLength={maxLength === null? maxLength: maxLength || patternLength}
+      maxLength={maxLength === null ? maxLength : maxLength || patternLength}
       onChange={this._onChange}
       onKeyDown={this._onKeyDown}
       onKeyPress={this._onKeyPress}
       onPaste={this._onPaste}
-      onFocus={e=>this._onFocus(e)}
-      onBlur={e=>this._onBlur(e)}
-      placeholder={onlyFocusPlaceholder? '': placeholder || this.mask.emptyValue}
-      size={size === null? size: size || patternLength}
+      onFocus={e => this._onFocus(e)}
+      onBlur={e => this._onBlur(e)}
+      placeholder={onlyFocusPlaceholder ? '' : placeholder || this.mask.emptyValue}
+      size={size === null ? size : size || patternLength}
       value={this._getDisplayValue()}
     />
   }
