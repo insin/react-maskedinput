@@ -17,9 +17,10 @@ function isRedo(e) {
 var MaskedInput = React.createClass({
   propTypes: {
     mask: React.PropTypes.string.isRequired,
-
+    maxLength: React.PropTypes.number,
     formatCharacters: React.PropTypes.object,
-    placeholderChar: React.PropTypes.string
+    placeholderChar: React.PropTypes.string,
+    onlyFocusPlaceholder: React.PropTypes.bool
   },
 
   getDefaultProps() {
@@ -151,18 +152,30 @@ var MaskedInput = React.createClass({
     return value === this.mask.emptyValue ? '' : value
   },
 
+  _onFocus(e) {
+    e.target.setAttribute('placeholder', this.props.placeholder || this.mask.emptyValue)
+    this.props.onFocus && this.props.onFocus(e)
+  },
+
+  _onBlur(e) {
+    e.target.setAttribute('placeholder', this.props.onlyFocusPlaceholder ? '' : this.props.placeholder || this.mask.emptyValue)
+    this.props.onBlur && this.props.onBlur(e)
+  },
+
   render() {
-    var {mask, formatCharacters, size, placeholder, ...props} = this.props
+    var {mask, formatCharacters, size, placeholder, maxLength, onlyFocusPlaceholder, ...props} = this.props
     var patternLength = this.mask.pattern.length
     return <input {...props}
       ref={r => this.input = r }
-      maxLength={patternLength}
+      maxLength={maxLength === null ? maxLength : maxLength || patternLength}
       onChange={this._onChange}
       onKeyDown={this._onKeyDown}
       onKeyPress={this._onKeyPress}
       onPaste={this._onPaste}
-      placeholder={placeholder || this.mask.emptyValue}
-      size={size || patternLength}
+      onFocus={e => this._onFocus(e)}
+      onBlur={e => this._onBlur(e)}
+      placeholder={onlyFocusPlaceholder ? '' : placeholder || this.mask.emptyValue}
+      size={size === null ? size : size || patternLength}
       value={this._getDisplayValue()}
     />
   }
