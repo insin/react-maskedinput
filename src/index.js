@@ -1,5 +1,3 @@
-'use strict';
-
 var React = require('react')
 var {getSelection, setSelection} = require('react/lib/ReactInputSelection')
 
@@ -63,7 +61,7 @@ var MaskedInput = React.createClass({
     // console.log('onChange', JSON.stringify(getSelection(this.input)), e.target.value)
 
     var maskValue = this.mask.getValue()
-    if (e.target.value != maskValue) {
+    if (e.target.value !== maskValue) {
       // Cut or delete operations will have shortened the value
       if (e.target.value.length < maskValue.length) {
         var sizeDiff = maskValue.length - e.target.value.length
@@ -104,7 +102,7 @@ var MaskedInput = React.createClass({
       return
     }
 
-    if (e.key == 'Backspace') {
+    if (e.key === 'Backspace') {
       e.preventDefault()
       this._updateMaskSelection()
       if (this.mask.backspace()) {
@@ -123,7 +121,7 @@ var MaskedInput = React.createClass({
 
     // Ignore modified key presses
     // Ignore enter key to allow form submission
-    if (e.metaKey || e.altKey || e.ctrlKey || e.key == 'Enter') { return }
+    if (e.metaKey || e.altKey || e.ctrlKey || e.key === 'Enter') { return }
 
     e.preventDefault()
     this._updateMaskSelection()

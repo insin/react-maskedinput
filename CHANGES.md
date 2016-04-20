@@ -1,4 +1,13 @@
-## 3.1.0 / 2015-10-23
+## 3.1.2 / 2016-04-11
+
+* Support for React 15.x.x
+
+## 3.1.1 / 2016-03-09
+
+* Convert tooling to use [nwb](https://github.com/insin/nwb/) [[bpugh]][[bpugh]]
+* Publish `dist` files
+
+## 3.1.0 / 2016-02-11
 
 * Added support for `value` behaving as a controlled component.
 

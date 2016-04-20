@@ -1,2 +1,7 @@
-lib/
-node_modules/
+/coverage
+/demo/dist
+/es6
+/lib
+/node_modules
+/umd
+npm-debug.log
