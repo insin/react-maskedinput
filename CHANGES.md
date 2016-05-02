@@ -1,3 +1,8 @@
+## 3.1.3 / 2016-05-02
+
+* Don’t call `onChange` function if undefined.
+* Update nwb to 0.9.x
+
 ## 3.1.2 / 2016-04-11
 
 * Support for React 15.x.x
