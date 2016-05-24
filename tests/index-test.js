@@ -46,5 +46,46 @@ describe('MaskedInput', () => {
 
     cleanup(el)
   })
+
+  it('should handle updating mask masking', () => {
+    const el = setup()
+    let ref = null
+    let defaultMask = '1111 1111 1111 1111'
+    let amexMask = '1111 111111 11111'
+    let mask = defaultMask
+
+    function render() {
+      ReactDOM.render(
+        <MaskedInput
+          ref={(r) => {
+            if (r) ref = r
+          }}
+          mask={mask}
+        />,
+        el
+      )
+    }
+
+    render();
+    let input = ReactDOM.findDOMNode(ref)
+
+    // initial state
+    expect(input.value).toBe('')
+    expect(input.placeholder).toBe('____ ____ ____ ____')
+    expect(input.size).toBe(19)
+    expect(input.selectionStart).toBe(0)
+
+    mask = amexMask
+    render();
+    input = ReactDOM.findDOMNode(ref)
+
+    // initial state
+    expect(input.value).toBe('')
+    expect(input.placeholder).toBe('____ ______ _____')
+    expect(input.size).toBe(17)
+    expect(input.selectionStart).toBe(0)
+
+    cleanup(el)
+  })
 })
 

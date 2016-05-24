@@ -23,7 +23,8 @@ const App = React.createClass({
       leading: '',
       custom: '',
       changing: '',
-      pattern: '1111 1111'
+      pattern: '1111 1111',
+      cardPattern: '1111 1111 1111 1111'
     }
   },
 
@@ -35,6 +36,14 @@ const App = React.createClass({
 
   _changePattern(e) {
     this.setState({pattern: e.target.value})
+  },
+
+  _onCardChange(e) {
+    if(/^3[47]/.test(e.target.value)) {
+      this.setState({cardPattern: "1111 111111 11111"})
+    } else {
+      this.setState({cardPattern: '1111 1111 1111 1111'})
+    }
   },
 
   render() {
@@ -85,6 +94,11 @@ const App = React.createClass({
         <select onChange={this._changePattern}>
           {PATTERNS.map(pattern => <option value={pattern} key={pattern}>{pattern}</option>)}
         </select>
+      </div>
+      <p>Dynamically changing the pattern as the user types:</p>
+      <div className="form-field">
+        <label htmlFor="changing">Credit Card:</label>
+        <MaskedInput mask={this.state.cardPattern} name="creditCard" id="creditCard" onChange={this._onCardChange}/>
       </div>
       <p>Custom format character (W=[a-zA-Z0-9_], transformed to uppercase) and placeholder character (en space):</p>
       <div className="form-field">
