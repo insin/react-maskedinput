@@ -1,7 +1,7 @@
 {
   "name": "react-maskedinput",
   "description": "Masked <input/> React component",
-  "version": "3.1.1",
+  "version": "3.2.0",
   "main": "./lib/index.js",
   "jsnext:main": "es6/index.js",
   "standalone": "MaskedInput",
@@ -31,13 +31,13 @@
     "inputmask-core": "^2.1.1"
   },
   "peerDependencies": {
-    "react": "0.14.x"
+    "react": "0.14.x || 15.x.x"
   },
   "devDependencies": {
     "eslint-config-jonnybuchanan": "2.0.3",
-    "nwb": "0.8.x",
-    "react": "0.14.x",
-    "react-dom": "0.14.x"
+    "nwb": "0.9.x",
+    "react": "15.x.x",
+    "react-dom": "15.x.x"
   },
   "repository": {
     "type": "git",

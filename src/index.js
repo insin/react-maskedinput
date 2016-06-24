@@ -49,6 +49,25 @@ var MaskedInput = React.createClass({
     }
   },
 
+  componentWillUpdate(nextProps, nextState) {
+    if (nextProps.mask !== this.props.mask) {
+      this._updatePattern(nextProps)
+    }
+  },
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.mask !== this.props.mask && this.mask.selection.start) {
+      this._updateInputSelection()
+    }
+  },
+
+  _updatePattern: function(props) {
+    this.mask.setPattern(props.mask, {
+      value: this.mask.getRawValue(),
+      selection: getSelection(this.input)
+    });
+  },
+
   _updateMaskSelection() {
     this.mask.selection = getSelection(this.input)
   },
@@ -88,7 +107,9 @@ var MaskedInput = React.createClass({
       if (this.mask.undo()) {
         e.target.value = this._getDisplayValue()
         this._updateInputSelection()
-        this.props.onChange(e)
+        if (this.props.onChange) {
+          this.props.onChange(e)
+        }
       }
       return
     }
@@ -97,7 +118,9 @@ var MaskedInput = React.createClass({
       if (this.mask.redo()) {
         e.target.value = this._getDisplayValue()
         this._updateInputSelection()
-        this.props.onChange(e)
+        if (this.props.onChange) {
+          this.props.onChange(e)
+        }
       }
       return
     }
@@ -111,7 +134,9 @@ var MaskedInput = React.createClass({
         if (value) {
           this._updateInputSelection()
         }
-        this.props.onChange(e)
+        if (this.props.onChange) {
+          this.props.onChange(e)
+        }
       }
     }
   },
@@ -128,7 +153,9 @@ var MaskedInput = React.createClass({
     if (this.mask.input(e.key)) {
       e.target.value = this.mask.getValue()
       this._updateInputSelection()
-      this.props.onChange(e)
+      if (this.props.onChange) {
+        this.props.onChange(e)
+      }
     }
   },
 
@@ -142,13 +169,23 @@ var MaskedInput = React.createClass({
       e.target.value = this.mask.getValue()
       // Timeout needed for IE
       setTimeout(this._updateInputSelection, 0)
-      this.props.onChange(e)
+      if (this.props.onChange) {
+        this.props.onChange(e)
+      }
     }
   },
 
   _getDisplayValue() {
     var value = this.mask.getValue()
     return value === this.mask.emptyValue ? '' : value
+  },
+  
+  focus() {
+    this.input.focus();
+  },
+  
+  blur() {
+    this.input.blur();
   },
 
   render() {
