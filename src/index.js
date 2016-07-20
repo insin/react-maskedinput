@@ -189,7 +189,7 @@ var MaskedInput = React.createClass({
   },
 
   render() {
-    var {mask, formatCharacters, size, placeholder, ...props} = this.props
+    var {mask, formatCharacters, size, placeholder, placeholderChar, ...props} = this.props
     var patternLength = this.mask.pattern.length
     return <input {...props}
       ref={r => this.input = r }
