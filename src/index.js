@@ -65,7 +65,7 @@ var MaskedInput = React.createClass({
     this.mask.setPattern(props.mask, {
       value: this.mask.getRawValue(),
       selection: getSelection(this.input)
-    });
+    })
   },
 
   _updateMaskSelection() {
@@ -179,13 +179,13 @@ var MaskedInput = React.createClass({
     var value = this.mask.getValue()
     return value === this.mask.emptyValue ? '' : value
   },
-  
+
   focus() {
-    this.input.focus();
+    this.input.focus()
   },
-  
+
   blur() {
-    this.input.blur();
+    this.input.blur()
   },
 
   render() {

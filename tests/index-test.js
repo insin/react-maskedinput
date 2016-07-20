@@ -7,8 +7,8 @@ import MaskedInput from 'src'
 const setup = () => {
   const element = document.createElement('div')
   document.body.appendChild(element)
-  return element;
-};
+  return element
+}
 
 const cleanup = (element) => {
   ReactDOM.unmountComponentAtNode(element)
@@ -19,9 +19,11 @@ describe('MaskedInput', () => {
   it('should render (smokescreen test)', () => {
     expect.spyOn(console, 'error')
     expect(<MaskedInput />).toExist()
-    expect(console.error.calls[0].arguments[0]).toBe(
-      'Warning: Failed propType: Required prop `mask` was not specified in ' +
-      '`MaskedInput`.'
+    expect(console.error.calls[0].arguments[0]).toMatch(
+      new RegExp(
+        'Warning: Failed prop type: Required prop ' +
+        '`mask` was not specified in `MaskedInput`.'
+      )
     )
   })
 
@@ -66,7 +68,7 @@ describe('MaskedInput', () => {
       )
     }
 
-    render();
+    render()
     let input = ReactDOM.findDOMNode(ref)
 
     // initial state
@@ -76,7 +78,7 @@ describe('MaskedInput', () => {
     expect(input.selectionStart).toBe(0)
 
     mask = amexMask
-    render();
+    render()
     input = ReactDOM.findDOMNode(ref)
 
     // initial state

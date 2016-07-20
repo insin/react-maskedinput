@@ -22,9 +22,10 @@
   "scripts": {
     "build": "nwb build",
     "clean": "nwb clean",
-    "lint": "eslint src",
+    "lint": "eslint src tests",
     "start": "nwb serve",
     "test": "nwb test",
+    "posttest": "npm run lint",
     "test:watch": "nwb test --server"
   },
   "dependencies": {
