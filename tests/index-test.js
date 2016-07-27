@@ -89,5 +89,48 @@ describe('MaskedInput', () => {
 
     cleanup(el)
   })
+
+  it('should remove leftover placeholder characters when switching to smaller mask', () => {
+    const el = setup()
+    let ref = null
+    let defaultMask = '1111 1111 1111 1111'
+    let amexMask = '1111 111111 11111'
+    let mask = defaultMask
+    let value = null
+
+    function render(props) {
+      ReactDOM.render(
+        <MaskedInput
+          ref={(r) => {
+            if (r) ref = r
+          }}
+          mask={mask}
+          value={value}
+        />,
+        el
+      )
+    }
+
+    render()
+    let input = ReactDOM.findDOMNode(ref)
+
+    // initial state
+    expect(input.value).toBe('')
+    expect(input.placeholder).toBe('____ ____ ____ ____')
+    expect(input.size).toBe(19)
+    expect(input.selectionStart).toBe(0)
+
+    mask = amexMask
+    value = '1234 123456 12345'
+    render()
+    input = ReactDOM.findDOMNode(ref)
+    console.log(input)
+
+    // initial state
+    expect(input.value).toBe('1234 123456 12345')
+    expect(input.size).toBe(17)
+
+    cleanup(el)
+  })
 })
 
