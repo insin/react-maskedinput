@@ -100,6 +100,9 @@ var MaskedInput = React.createClass({
         this.mask.selection.end = this.mask.selection.start + sizeDiff
         this.mask.backspace()
       }
+      else {
+        this.mask.setValue(e.target.value)
+      }
       var value = this._getDisplayValue()
       e.target.value = value
       if (value) {

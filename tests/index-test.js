@@ -1,6 +1,7 @@
 /* eslint-env mocha */
 import React from 'react'
 import ReactDOM from 'react-dom'
+import TestUtils from 'react-addons-test-utils'
 import expect from 'expect'
 import MaskedInput from 'src'
 
@@ -201,6 +202,28 @@ describe('MaskedInput', () => {
     // initial state
     expect(input.value).toBe('1234 123456 12345')
     expect(input.size).toBe(17)
+
+    cleanup(el)
+  })
+
+  it('should receive value from event.target in first argument of onChange callback', () => {
+    const onChange = expect.createSpy()
+    const el = setup()
+    let ref = null
+    ReactDOM.render(
+      <MaskedInput
+        ref={(r) => {
+          if (r) ref = r
+        }}
+        mask="11.11.1111"
+        onChange={ onChange }
+      />,
+      el
+    )
+    const input = ReactDOM.findDOMNode(ref)
+    TestUtils.Simulate.change(input, { target: { value: '99.99.9999' } })
+
+    expect(onChange.calls[0].arguments[0].target.value).toEqual('99.99.9999')
 
     cleanup(el)
   })
