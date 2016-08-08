@@ -49,26 +49,25 @@ describe('MaskedInput', () => {
     cleanup(el)
   })
 
-  it('should handle updating mask masking', () => {
+  it('should handle updating mask', () => {
     const el = setup()
     let ref = null
     let defaultMask = '1111 1111 1111 1111'
     let amexMask = '1111 111111 11111'
-    let mask = defaultMask
 
-    function render() {
+    function render(props) {
       ReactDOM.render(
         <MaskedInput
           ref={(r) => {
             if (r) ref = r
           }}
-          mask={mask}
+          {...props}
         />,
         el
       )
     }
 
-    render()
+    render({mask: defaultMask})
     let input = ReactDOM.findDOMNode(ref)
 
     // initial state
@@ -77,8 +76,7 @@ describe('MaskedInput', () => {
     expect(input.size).toBe(19)
     expect(input.selectionStart).toBe(0)
 
-    mask = amexMask
-    render()
+    render({mask: amexMask})
     input = ReactDOM.findDOMNode(ref)
 
     // initial state
@@ -86,6 +84,81 @@ describe('MaskedInput', () => {
     expect(input.placeholder).toBe('____ ______ _____')
     expect(input.size).toBe(17)
     expect(input.selectionStart).toBe(0)
+
+    cleanup(el)
+  })
+
+  it('should handle updating value', () => {
+    const el = setup()
+    let ref = null
+    let defaultMask = '1111 1111 1111 1111'
+
+    function render(props) {
+      ReactDOM.render(
+        <MaskedInput
+          ref={(r) => ref = r}
+          {...props}
+        />,
+        el
+      )
+    }
+
+    render({mask: defaultMask, value: ''})
+    let input = ReactDOM.findDOMNode(ref)
+
+    // initial state
+    expect(input.value).toBe('')
+    expect(input.placeholder).toBe('____ ____ ____ ____')
+    expect(input.size).toBe(19)
+    expect(input.selectionStart).toBe(0)
+
+    // update value
+    render({mask: defaultMask, value: '4111111111111111'})
+    input = ReactDOM.findDOMNode(ref)
+
+    // initial state
+    expect(input.value).toBe('4111 1111 1111 1111')
+    expect(input.size).toBe(19)
+    expect(input.selectionStart).toBe(19)
+
+    cleanup(el)
+  })
+
+  it('should handle updating mask and value', () => {
+    const el = setup()
+    let ref = null
+    let defaultMask = '1111 1111 1111 1111'
+    let amexMask = '1111 111111 11111'
+    let value = ''
+    let mask = defaultMask
+
+    function render(props) {
+      ReactDOM.render(
+        <MaskedInput
+          ref={(r) => ref = r}
+          {...props}
+        />,
+        el
+      )
+    }
+
+    render({mask, value})
+    let input = ReactDOM.findDOMNode(ref)
+
+    // initial state
+    expect(input.value).toBe('')
+    expect(input.placeholder).toBe('____ ____ ____ ____')
+    expect(input.size).toBe(19)
+    expect(input.selectionStart).toBe(0)
+
+    // update mask and value
+    render({mask: amexMask, value: '378282246310005'})
+    input = ReactDOM.findDOMNode(ref)
+
+    // initial state
+    expect(input.value).toBe('3782 822463 10005')
+    expect(input.size).toBe(17)
+    expect(input.selectionStart).toBe(17)
 
     cleanup(el)
   })
@@ -124,7 +197,6 @@ describe('MaskedInput', () => {
     value = '1234 123456 12345'
     render()
     input = ReactDOM.findDOMNode(ref)
-    console.log(input)
 
     // initial state
     expect(input.value).toBe('1234 123456 12345')
@@ -132,5 +204,51 @@ describe('MaskedInput', () => {
 
     cleanup(el)
   })
-})
 
+  it('should handle updating multiple values', () => {
+    const el = setup()
+    let ref = null
+    let defaultMask = '1111 1111 1111 1111'
+    const mastercard = '5555555555554444'
+    const visa = '4111111111111111'
+
+    function render(props) {
+      ReactDOM.render(
+        <MaskedInput
+          ref={(r) => ref = r}
+          {...props}
+        />,
+        el
+      )
+    }
+
+    render({mask: defaultMask, value: ''})
+    let input = ReactDOM.findDOMNode(ref)
+
+    // initial state
+    expect(input.value).toBe('')
+    expect(input.placeholder).toBe('____ ____ ____ ____')
+    expect(input.size).toBe(19)
+    expect(input.selectionStart).toBe(0)
+
+    // update mask and value
+    render({mask: defaultMask, value: visa})
+    input = ReactDOM.findDOMNode(ref)
+
+    // initial state
+    expect(input.value).toBe('4111 1111 1111 1111')
+    expect(input.size).toBe(19)
+    expect(input.selectionStart).toBe(19)
+
+    // update mask and value
+    render({mask: defaultMask, value: mastercard})
+    input = ReactDOM.findDOMNode(ref)
+
+    // initial state
+    expect(input.value).toBe('5555 5555 5555 4444')
+    expect(input.size).toBe(19)
+    expect(input.selectionStart).toBe(19)
+
+    cleanup(el)
+  })
+})
