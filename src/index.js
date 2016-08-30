@@ -19,7 +19,10 @@ var MaskedInput = React.createClass({
     mask: React.PropTypes.string.isRequired,
 
     formatCharacters: React.PropTypes.object,
-    placeholderChar: React.PropTypes.string
+    placeholderChar: React.PropTypes.string,
+    onKeyDown: React.PropTypes.func,
+    onBeforeInput: React.PropTypes.func,
+    onPaste: React.PropTypes.func
   },
 
   getDefaultProps() {
@@ -151,10 +154,17 @@ var MaskedInput = React.createClass({
         }
       }
     }
+
+    if (this.props.onKeyDown) {
+      this.props.onKeyDown(e)
+    }
   },
 
-  _onKeyPress(e) {
-    // console.log('onKeyPress', JSON.stringify(getSelection(this.input)), e.key, e.target.value)
+  _onBeforeInput(e) {
+    // console.log('onBeforeInput', JSON.stringify(getSelection(this.input)), e.key, e.target.value)
+    if (this.props.onBeforeInput) {
+      this.props.onBeforeInput(e)
+    }
 
     // Ignore modified key presses
     // Ignore enter key to allow form submission
@@ -185,6 +195,10 @@ var MaskedInput = React.createClass({
         this.props.onChange(e)
       }
     }
+
+    if (this.props.onPaste) {
+      this.props.onPaste(e)
+    }
   },
 
   _getDisplayValue() {
@@ -208,7 +222,7 @@ var MaskedInput = React.createClass({
       maxLength={patternLength}
       onChange={this._onChange}
       onKeyDown={this._onKeyDown}
-      onBeforeInput={this._onKeyPress}
+      onBeforeInput={this._onBeforeInput}
       onPaste={this._onPaste}
       placeholder={placeholder || this.mask.emptyValue}
       size={size || patternLength}

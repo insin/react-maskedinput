@@ -124,11 +124,14 @@ A default `placeholder` will be generated from the mask's pattern, but you can p
 
 By default, the rendered `<input>`'s `size` will be the length of the pattern, but you can pass a `size` prop to override this.
 
+### `onKeyDown | onBeforeInput | onPaste` : `(event: SyntheticEvent) => any`
+
+These props will be invoked as usual, however, they are also handled internally and will invoke `onChange` when necessary.
+
 ### Other props
 
 Any other props passed in will be passed as props to the rendered `<input>`, except for the following, which are managed by the component:
 
 * `maxLength` - will always be equal to the pattern's `.length`
-* `onKeyDown`, `onKeyPress` & `onPaste` - will each trigger a call to `onChange` when necessary
 
 ## MIT Licensed
