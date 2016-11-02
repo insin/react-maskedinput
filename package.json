@@ -35,6 +35,7 @@
     "react": "0.14.x || 15.x.x"
   },
   "devDependencies": {
+    "babel-eslint": "^7.1.0",
     "eslint-config-jonnybuchanan": "2.0.3",
     "nwb": "0.9.x",
     "react": "15.x.x",
