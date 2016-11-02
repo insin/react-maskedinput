@@ -31,7 +31,7 @@ function getSelection (el) {
       start = clone.text.length
       end = start + rangeEl.text.length
     }
-    catch(e) { /* not focused or not visible */ }
+    catch (e) { /* not focused or not visible */ }
   }
 
   return { start, end }
@@ -41,7 +41,7 @@ function setSelection(el, selection) {
   var rangeEl
 
   try {
-    if(el.selectionStart !== undefined) {
+    if (el.selectionStart !== undefined) {
       el.focus()
       el.setSelectionRange(selection.start, selection.end)
     }
@@ -54,7 +54,7 @@ function setSelection(el, selection) {
       rangeEl.select()
     }
   }
-  catch(e) { /* not focused or not visible */ }
+  catch (e) { /* not focused or not visible */ }
 }
 
 var MaskedInput = React.createClass({
