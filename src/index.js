@@ -13,9 +13,9 @@ function isRedo(e) {
 }
 
 function getSelection (el) {
-  var start, end, rangeEl, clone;
+  var start, end, rangeEl, clone
 
-  if( el.selectionStart !== undefined){
+  if (el.selectionStart !== undefined) {
     start = el.selectionStart
     end = el.selectionEnd
   }
@@ -25,11 +25,11 @@ function getSelection (el) {
       rangeEl = el.createTextRange()
       clone = rangeEl.duplicate()
 
-      rangeEl.moveToBookmark(document.selection.createRange().getBookmark());
-      clone.setEndPoint('EndToStart', rangeEl);
+      rangeEl.moveToBookmark(document.selection.createRange().getBookmark())
+      clone.setEndPoint('EndToStart', rangeEl)
 
-      start = clone.text.length;
-      end   = start + rangeEl.text.length
+      start = clone.text.length
+      end = start + rangeEl.text.length
     }
     catch(e) { /* not focused or not visible */ }
   }
@@ -37,21 +37,21 @@ function getSelection (el) {
   return { start, end }
 }
 
-function setSelection(el, selection){
-  var rangeEl;
+function setSelection(el, selection) {
+  var rangeEl
 
   try {
-    if( el.selectionStart !== undefined){
+    if(el.selectionStart !== undefined) {
       el.focus()
       el.setSelectionRange(selection.start, selection.end)
     }
     else {
-      el.focus();
-      rangeEl = el.createTextRange();
-      rangeEl.collapse(true);
-      rangeEl.moveStart('character', selection.start);
-      rangeEl.moveEnd('character', selection.end - selection.start);
-      rangeEl.select();
+      el.focus()
+      rangeEl = el.createTextRange()
+      rangeEl.collapse(true)
+      rangeEl.moveStart('character', selection.start)
+      rangeEl.moveEnd('character', selection.end - selection.start)
+      rangeEl.select()
     }
   }
   catch(e) { /* not focused or not visible */ }
