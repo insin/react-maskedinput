@@ -1,6 +1,4 @@
 var React = require('react')
-var {getSelection, setSelection} = require('react/lib/ReactInputSelection')
-
 var InputMask = require('inputmask-core')
 
 var KEYCODE_Z = 90
@@ -12,6 +10,51 @@ function isUndo(e) {
 
 function isRedo(e) {
   return (e.ctrlKey || e.metaKey) && e.keyCode === (e.shiftKey ? KEYCODE_Z : KEYCODE_Y)
+}
+
+function getSelection (el) {
+  var start, end, rangeEl, clone
+
+  if (el.selectionStart !== undefined) {
+    start = el.selectionStart
+    end = el.selectionEnd
+  }
+  else {
+    try {
+      el.focus()
+      rangeEl = el.createTextRange()
+      clone = rangeEl.duplicate()
+
+      rangeEl.moveToBookmark(document.selection.createRange().getBookmark())
+      clone.setEndPoint('EndToStart', rangeEl)
+
+      start = clone.text.length
+      end = start + rangeEl.text.length
+    }
+    catch (e) { /* not focused or not visible */ }
+  }
+
+  return { start, end }
+}
+
+function setSelection(el, selection) {
+  var rangeEl
+
+  try {
+    if (el.selectionStart !== undefined) {
+      el.focus()
+      el.setSelectionRange(selection.start, selection.end)
+    }
+    else {
+      el.focus()
+      rangeEl = el.createTextRange()
+      rangeEl.collapse(true)
+      rangeEl.moveStart('character', selection.start)
+      rangeEl.moveEnd('character', selection.end - selection.start)
+      rangeEl.select()
+    }
+  }
+  catch (e) { /* not focused or not visible */ }
 }
 
 var MaskedInput = React.createClass({
