@@ -20,10 +20,13 @@ describe('MaskedInput', () => {
     expect.spyOn(console, 'error')
     expect(<MaskedInput />).toExist()
     expect(console.error.calls[0].arguments[0]).toMatch(
-      new RegExp(
-        'Warning: Failed prop type: Required prop ' +
-        '`mask` was not specified in `MaskedInput`.'
-      )
+      new RegExp('Warning: Failed prop type:')
+    )
+    expect(console.error.calls[0].arguments[0]).toMatch(
+      new RegExp('`mask`')
+    )
+    expect(console.error.calls[0].arguments[0]).toMatch(
+      new RegExp('required', 'i')
     )
   })
 
