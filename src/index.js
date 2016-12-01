@@ -236,7 +236,7 @@ var MaskedInput = React.createClass({
   },
 
   _userAgentIsEdge() {
-    return navigator.userAgent.match(/(Edge)/i);
+    return navigator.userAgent.match(/(Edge)/i)
   },
 
   _keyPressEventProp() {
@@ -269,7 +269,7 @@ var MaskedInput = React.createClass({
       onPaste: this._onPaste
     }
 
-    eventHandlers[this._keyPressEventProp()] = this._onKeyPress;
+    eventHandlers[this._keyPressEventProp()] = this._onKeyPress
 
     var props = { ...this.props, ...eventHandlers, ref, maxLength, value, size, placeholder }
 
