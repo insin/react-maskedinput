@@ -247,9 +247,9 @@ var MaskedInput = React.createClass({
   _keyPressEventProp() {
     var { userAgent } = navigator
     var isEdge = userAgent.match(/Edge/i)
-    var isNotAndroid = !userAgent.match(/[Aa]ndroid/i)
+    var isAndroid = userAgent.match(/Android/i)
 
-    return (isEdge || isNotAndroid)
+    return isEdge || isAndroid
       ? 'onKeyPress'
       : 'onBeforeInput'
   },
@@ -263,7 +263,7 @@ var MaskedInput = React.createClass({
   },
 
   render() {
-    var ref = (r => this.input = r)
+    var ref = r => this.input = r
     var maxLength = this.mask.pattern.length
     var value = this._getDisplayValue()
     var eventHandlers = this._getEventHandlers()
