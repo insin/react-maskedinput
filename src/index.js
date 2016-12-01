@@ -235,7 +235,7 @@ var MaskedInput = React.createClass({
     return value === this.mask.emptyValue ? '' : value
   },
 
-  _keyPressEventProp() {
+  _keyPressPropName() {
     return navigator.userAgent.match(/Android/i)
       ? 'onBeforeInput'
       : 'onKeyPress'
@@ -246,7 +246,7 @@ var MaskedInput = React.createClass({
       onChange: this._onChange,
       onKeyDown: this._onKeyDown,
       onPaste: this._onPaste,
-      [this._keyPressEventProp()]: this._onKeyPress
+      [this._keyPressPropName()]: this._onKeyPress
     }
   },
 
