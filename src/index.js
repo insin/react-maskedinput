@@ -235,6 +235,21 @@ var MaskedInput = React.createClass({
     return value === this.mask.emptyValue ? '' : value
   },
 
+  _keyPressPropName() {
+    return navigator.userAgent.match(/Android/i)
+      ? 'onBeforeInput'
+      : 'onKeyPress'
+  },
+
+  _getEventHandlers() {
+    return {
+      onChange: this._onChange,
+      onKeyDown: this._onKeyDown,
+      onPaste: this._onPaste,
+      [this._keyPressPropName()]: this._onKeyPress
+    }
+  },
+
   focus() {
     this.input.focus()
   },
@@ -244,19 +259,14 @@ var MaskedInput = React.createClass({
   },
 
   render() {
-    var {mask, formatCharacters, size, placeholder, placeholderChar, ...props} = this.props
-    var patternLength = this.mask.pattern.length
-    return <input {...props}
-      ref={r => this.input = r }
-      maxLength={patternLength}
-      onChange={this._onChange}
-      onKeyDown={this._onKeyDown}
-      onBeforeInput={this._onKeyPress}
-      onPaste={this._onPaste}
-      placeholder={placeholder || this.mask.emptyValue}
-      size={size || patternLength}
-      value={this._getDisplayValue()}
-    />
+    var ref = r => this.input = r
+    var maxLength = this.mask.pattern.length
+    var value = this._getDisplayValue()
+    var eventHandlers = this._getEventHandlers()
+    var { size = maxLength, placeholder = this.mask.emptyValue } = this.props
+    var props = { ...this.props, ...eventHandlers, ref, maxLength, value, size, placeholder }
+
+    return <input {...props} />
   }
 })
 
