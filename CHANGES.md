@@ -1,3 +1,7 @@
+## 3.3.2 / 2016-12-01
+
+* Fix for both Android and MS Edge input entering
+
 ## 3.2.0 / 2016-05-24
 
 * Allow dynamic pattern updating [[martyphee][martyphee]]
