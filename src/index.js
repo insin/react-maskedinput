@@ -235,6 +235,16 @@ var MaskedInput = React.createClass({
     return value === this.mask.emptyValue ? '' : value
   },
 
+  _userAgentIsEdge() {
+    return navigator.userAgent.match(/(Edge)/i);
+  },
+
+  _keyPressEventProp() {
+    return (this._userAgentIsEdge)
+      ? 'onKeyPress'
+      : 'onBeforeInput'
+  },
+
   focus() {
     this.input.focus()
   },
@@ -244,19 +254,26 @@ var MaskedInput = React.createClass({
   },
 
   render() {
-    var {mask, formatCharacters, size, placeholder, placeholderChar, ...props} = this.props
-    var patternLength = this.mask.pattern.length
-    return <input {...props}
-      ref={r => this.input = r }
-      maxLength={patternLength}
-      onChange={this._onChange}
-      onKeyDown={this._onKeyDown}
-      onBeforeInput={this._onKeyPress}
-      onPaste={this._onPaste}
-      placeholder={placeholder || this.mask.emptyValue}
-      size={size || patternLength}
-      value={this._getDisplayValue()}
-    />
+    var ref = (r => this.input = r)
+    var maxLength = this.mask.pattern.length
+    var value = this._getDisplayValue()
+
+    var {
+      size = maxLength,
+      placeholder = this.mask.emptyValue
+    } = this.props
+
+    var eventHandlers = {
+      onChange: this._onChange,
+      onKeyDown: this._onKeyDown,
+      onPaste: this._onPaste
+    }
+
+    eventHandlers[this._keyPressEventProp()] = this._onKeyPress;
+
+    var props = { ...this.props, ...eventHandlers, ref, maxLength, value, size, placeholder }
+
+    return <input {...props} />
   }
 })
 
