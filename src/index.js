@@ -235,6 +235,12 @@ var MaskedInput = React.createClass({
     return value === this.mask.emptyValue ? '' : value
   },
 
+  _keyPressEventProp() {
+    return navigator.userAgent.match(/Android/i)
+      ? 'onBeforeInput'
+      : 'onKeyPress'
+  },
+
   _getEventHandlers() {
     return {
       onChange: this._onChange,
@@ -242,16 +248,6 @@ var MaskedInput = React.createClass({
       onPaste: this._onPaste,
       [this._keyPressEventProp()]: this._onKeyPress
     }
-  },
-
-  _keyPressEventProp() {
-    var { userAgent } = navigator
-    var isEdge = userAgent.match(/Edge/i)
-    var isAndroid = userAgent.match(/Android/i)
-
-    return isEdge || isAndroid
-      ? 'onKeyPress'
-      : 'onBeforeInput'
   },
 
   focus() {
@@ -267,13 +263,7 @@ var MaskedInput = React.createClass({
     var maxLength = this.mask.pattern.length
     var value = this._getDisplayValue()
     var eventHandlers = this._getEventHandlers()
-
-    var {
-      size = maxLength,
-      placeholder = this.mask.emptyValue
-    } = this.props
-
-
+    var { size = maxLength, placeholder = this.mask.emptyValue } = this.props
     var props = { ...this.props, ...eventHandlers, ref, maxLength, value, size, placeholder }
 
     return <input {...props} />
