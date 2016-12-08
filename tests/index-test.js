@@ -209,6 +209,27 @@ describe('MaskedInput', () => {
     cleanup(el)
   })
 
+  it('cleans props from input', () => {
+    const el = setup()
+    let ref = null
+    let defaultMask = '1111 1111 1111 1111'
+    function render(props) {
+      ReactDOM.render(
+        <MaskedInput ref={(r) => ref = r} {...props} />,
+        el
+      )
+    }
+    expect.spyOn(console, 'error')
+    render({mask: defaultMask, value: '',
+            placeholderChar: 'X', formatCharacters: {A: null}})
+    expect(console.error).toNotHaveBeenCalled()
+    console.error.restore()
+    let input = ReactDOM.findDOMNode(ref)
+    expect(input.getAttribute('placeholderChar')).toNotExist()
+    expect(input.getAttribute('formatCharacters')).toNotExist()
+    cleanup(el)
+  })
+
   it('should handle updating multiple values', () => {
     const el = setup()
     let ref = null

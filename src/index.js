@@ -264,9 +264,10 @@ var MaskedInput = React.createClass({
     var value = this._getDisplayValue()
     var eventHandlers = this._getEventHandlers()
     var { size = maxLength, placeholder = this.mask.emptyValue } = this.props
-    var props = { ...this.props, ...eventHandlers, ref, maxLength, value, size, placeholder }
 
-    return <input {...props} />
+    var {placeholderChar, formatCharacters, ...cleanedProps} = this.props
+    var inputProps = { ...cleanedProps, ...eventHandlers, ref, maxLength, value, size, placeholder }
+    return <input {...inputProps} />
   }
 })
 
