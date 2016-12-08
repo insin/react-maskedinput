@@ -28,6 +28,7 @@ describe('MaskedInput', () => {
     expect(console.error.calls[0].arguments[0]).toMatch(
       new RegExp('required', 'i')
     )
+    console.error.restore()
   })
 
   it('should handle a masking workflow', () => {
