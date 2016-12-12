@@ -38,6 +38,7 @@
     "eslint-config-jonnybuchanan": "2.0.3",
     "nwb": "0.9.x",
     "react": "15.x.x",
+    "react-addons-test-utils": "15.x.x",
     "react-dom": "15.x.x"
   },
   "repository": {
