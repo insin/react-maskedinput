@@ -28,6 +28,7 @@ describe('MaskedInput', () => {
     expect(console.error.calls[0].arguments[0]).toMatch(
       new RegExp('required', 'i')
     )
+    console.error.restore()
   })
 
   it('should handle a masking workflow', () => {
@@ -205,6 +206,27 @@ describe('MaskedInput', () => {
     expect(input.value).toBe('1234 123456 12345')
     expect(input.size).toBe(17)
 
+    cleanup(el)
+  })
+
+  it('cleans props from input', () => {
+    const el = setup()
+    let ref = null
+    let defaultMask = '1111 1111 1111 1111'
+    function render(props) {
+      ReactDOM.render(
+        <MaskedInput ref={(r) => ref = r} {...props} />,
+        el
+      )
+    }
+    expect.spyOn(console, 'error')
+    render({mask: defaultMask, value: '',
+            placeholderChar: 'X', formatCharacters: {A: null}})
+    expect(console.error).toNotHaveBeenCalled()
+    console.error.restore()
+    let input = ReactDOM.findDOMNode(ref)
+    expect(input.getAttribute('placeholderChar')).toNotExist()
+    expect(input.getAttribute('formatCharacters')).toNotExist()
     cleanup(el)
   })
 
