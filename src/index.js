@@ -236,12 +236,12 @@ var MaskedInput = React.createClass({
   },
 
   _keyPressPropName() {
-    if(navigator) {
+    if (navigator) {
       return navigator.userAgent.match(/Android/i)
       ? 'onBeforeInput'
       : 'onKeyPress'
     }
-    return;
+    return
   },
 
   _getEventHandlers() {
