@@ -264,7 +264,7 @@ var MaskedInput = React.createClass({
   render() {
     var ref = r => this.input = r
     var maxLength = this.mask.pattern.length
-    var value = this._getDisplayValue()
+    var value = this._getDisplayValue().trim()
     var eventHandlers = this._getEventHandlers()
     var { size = maxLength, placeholder = this.mask.emptyValue } = this.props
 
