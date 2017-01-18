@@ -1,5 +1,5 @@
 {
-  "name": "react-maskedinput",
+  "name": "@musicglue/react-maskedinput",
   "description": "Masked <input/> React component",
   "version": "3.3.4",
   "main": "./lib/index.js",
