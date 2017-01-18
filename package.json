@@ -1,7 +1,7 @@
 {
-  "name": "react-maskedinput",
+  "name": "@musicglue/react-maskedinput",
   "description": "Masked <input/> React component",
-  "version": "3.3.4",
+  "version": "3.3.5",
   "main": "./lib/index.js",
   "jsnext:main": "es6/index.js",
   "standalone": "MaskedInput",
