@@ -28,6 +28,12 @@ const App = React.createClass({
     }
   },
 
+  _onSubmit(e) {
+    const stateChange = {}
+    stateChange[e.target.name] = e.target.value
+    console.log('submitted', stateChange)
+  },
+
   _onChange(e) {
     const stateChange = {}
     stateChange[e.target.name] = e.target.value
@@ -54,7 +60,7 @@ const App = React.createClass({
       <p className="lead">A React component which creates a masked <code>&lt;input/&gt;</code></p>
       <div className="form-field">
         <label htmlFor="card">Card Number:</label>
-        <MaskedInput mask="1111 1111 1111 1111" name="card" id="card" size="20" value={this.state.card} onChange={this._onChange}/>
+        <MaskedInput onSubmit={this._onSubmit} mask="1111 1111 1111 1111" name="card" id="card" size="20" value={this.state.card} onChange={this._onChange}/>
       </div>
       <p>You can even externally update the card state like a standard input element:</p>
       <div className="form-field">

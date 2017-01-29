@@ -59,6 +59,8 @@ function setSelection(el, selection) {
 
 var MaskedInput = React.createClass({
   propTypes: {
+    onChange: React.PropTypes.func,
+    onSubmit: React.PropTypes.func,
     mask: React.PropTypes.string.isRequired,
 
     formatCharacters: React.PropTypes.object,
@@ -200,8 +202,15 @@ var MaskedInput = React.createClass({
     // console.log('onKeyPress', JSON.stringify(getSelection(this.input)), e.key, e.target.value)
 
     // Ignore modified key presses
-    // Ignore enter key to allow form submission
-    if (e.metaKey || e.altKey || e.ctrlKey || e.key === 'Enter') { return }
+    if (e.metaKey || e.altKey || e.ctrlKey) { return }
+
+    // Ignore enter key to allow form submission, but allow explicit onSubmit handler notice
+    if (e.key === 'Enter') {
+      if (this.props.onSubmit) {
+        this.props.onSubmit(e)
+      }
+      return
+    }
 
     e.preventDefault()
     this._updateMaskSelection()
