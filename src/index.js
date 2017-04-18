@@ -59,6 +59,15 @@ function setSelection(el, selection) {
 }
 
 class MaskedInput extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this._onChange = this._onChange.bind(this)
+    this._onKeyDown = this._onKeyDown.bind(this)
+    this._onPaste = this._onPaste.bind(this)
+    this._onKeyPress = this._onKeyPress.bind(this)
+  }
+  
   componentWillMount() {
     var options = {
       pattern: this.props.mask,
