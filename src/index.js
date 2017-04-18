@@ -67,7 +67,7 @@ class MaskedInput extends React.Component {
     this._onPaste = this._onPaste.bind(this)
     this._onKeyPress = this._onKeyPress.bind(this)
   }
-  
+
   componentWillMount() {
     var options = {
       pattern: this.props.mask,
