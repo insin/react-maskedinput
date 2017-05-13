@@ -222,7 +222,7 @@ var MaskedInput = React.createClass({
     }
   },
 
-  _updateValue(e){
+  _updateValue(e) {
     this.mask.setValue(this.mask.getValue())
     if (this.props.onChange) {
       this.props.onChange(e)
