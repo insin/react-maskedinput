@@ -80,6 +80,9 @@ var MaskedInput = React.createClass({
     if (this.props.placeholderChar) {
       options.placeholderChar = this.props.placeholderChar
     }
+    if (this.props.isRevealingMask) {
+      options.isRevealingMask = this.props.isRevealingMask
+    }
     this.mask = new InputMask(options)
   },
 
@@ -268,7 +271,7 @@ var MaskedInput = React.createClass({
     var eventHandlers = this._getEventHandlers()
     var { size = maxLength, placeholder = this.mask.emptyValue } = this.props
 
-    var {placeholderChar, formatCharacters, ...cleanedProps} = this.props
+    var {placeholderChar, formatCharacters, isRevealingMask, ...cleanedProps} = this.props
     var inputProps = { ...cleanedProps, ...eventHandlers, ref, maxLength, value, size, placeholder }
     return <input {...inputProps} />
   }

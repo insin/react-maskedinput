@@ -54,7 +54,7 @@ const App = React.createClass({
       <p className="lead">A React component which creates a masked <code>&lt;input/&gt;</code></p>
       <div className="form-field">
         <label htmlFor="card">Card Number:</label>
-        <MaskedInput mask="1111 1111 1111 1111" name="card" id="card" size="20" value={this.state.card} onChange={this._onChange}/>
+        <MaskedInput mask="1111 1111 1111 1111" name="card" id="card" size="20" value={this.state.card} onChange={this._onChange} isRevealingMask/>
       </div>
       <p>You can even externally update the card state like a standard input element:</p>
       <div className="form-field">
@@ -64,7 +64,7 @@ const App = React.createClass({
       <p>Placeholders are automatically generated but can be overridden with your own:</p>
       <div className="form-field">
         <label htmlFor="expiry">Expiry Date:</label>
-        <MaskedInput mask="11/1111" name="expiry" id="expiry" placeholder="mm/yyyy" onChange={this._onChange}/>
+        <MaskedInput mask="11/1111" name="expiry" id="expiry" placeholder="mm/yyyy" onChange={this._onChange} isRevealingMask/>
       </div>
       <div className="form-field">
         <label htmlFor="ccv">CCV:</label>
