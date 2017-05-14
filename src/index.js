@@ -1,5 +1,7 @@
-var React = require('react')
-var InputMask = require('inputmask-core')
+import React from 'react'
+import PropTypes from 'prop-types'
+import InputMask from 'inputmask-core'
+import './style.css'
 
 var KEYCODE_Z = 90
 var KEYCODE_Y = 89
@@ -57,19 +59,10 @@ function setSelection(el, selection) {
   catch (e) { /* not focused or not visible */ }
 }
 
-var MaskedInput = React.createClass({
-  propTypes: {
-    mask: React.PropTypes.string.isRequired,
-
-    formatCharacters: React.PropTypes.object,
-    placeholderChar: React.PropTypes.string
-  },
-
-  getDefaultProps() {
-    return {
-      value: ''
-    }
-  },
+export class MaskedInput extends React.Component {
+  constructor(props) {
+    super(props)
+  }
 
   componentWillMount() {
     var options = {
@@ -80,8 +73,11 @@ var MaskedInput = React.createClass({
     if (this.props.placeholderChar) {
       options.placeholderChar = this.props.placeholderChar
     }
+    if (this.props.isRevealingMask) {
+      options.isRevealingMask = this.props.isRevealingMask
+    }
     this.mask = new InputMask(options)
-  },
+  }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.mask !== nextProps.mask && this.props.value !== nextProps.mask) {
@@ -102,34 +98,34 @@ var MaskedInput = React.createClass({
     else if (this.props.value !== nextProps.value) {
       this.mask.setValue(nextProps.value)
     }
-  },
+  }
 
   componentWillUpdate(nextProps, nextState) {
     if (nextProps.mask !== this.props.mask) {
       this._updatePattern(nextProps)
     }
-  },
+  }
 
   componentDidUpdate(prevProps) {
     if (prevProps.mask !== this.props.mask && this.mask.selection.start) {
       this._updateInputSelection()
     }
-  },
+  }
 
-  _updatePattern: function(props) {
+  _updatePattern(props) {
     this.mask.setPattern(props.mask, {
       value: this.mask.getRawValue(),
       selection: getSelection(this.input)
     })
-  },
+  }
 
   _updateMaskSelection() {
     this.mask.selection = getSelection(this.input)
-  },
+  }
 
   _updateInputSelection() {
     setSelection(this.input, this.mask.selection)
-  },
+  }
 
   _onChange(e) {
     // console.log('onChange', JSON.stringify(getSelection(this.input)), e.target.value)
@@ -149,10 +145,8 @@ var MaskedInput = React.createClass({
         this._updateInputSelection()
       }
     }
-    if (this.props.onChange) {
-      this.props.onChange(e)
-    }
-  },
+    this._updateValue(e)
+  }
 
   _onKeyDown(e) {
     // console.log('onKeyDown', JSON.stringify(getSelection(this.input)), e.key, e.target.value)
@@ -162,9 +156,7 @@ var MaskedInput = React.createClass({
       if (this.mask.undo()) {
         e.target.value = this._getDisplayValue()
         this._updateInputSelection()
-        if (this.props.onChange) {
-          this.props.onChange(e)
-        }
+        this._updateValue(e)
       }
       return
     }
@@ -173,9 +165,7 @@ var MaskedInput = React.createClass({
       if (this.mask.redo()) {
         e.target.value = this._getDisplayValue()
         this._updateInputSelection()
-        if (this.props.onChange) {
-          this.props.onChange(e)
-        }
+        this._updateValue(e)
       }
       return
     }
@@ -189,12 +179,10 @@ var MaskedInput = React.createClass({
         if (value) {
           this._updateInputSelection()
         }
-        if (this.props.onChange) {
-          this.props.onChange(e)
-        }
+        this._updateValue(e)
       }
     }
-  },
+  }
 
   _onKeyPress(e) {
     // console.log('onKeyPress', JSON.stringify(getSelection(this.input)), e.key, e.target.value)
@@ -207,12 +195,11 @@ var MaskedInput = React.createClass({
     this._updateMaskSelection()
     if (this.mask.input((e.key || e.data))) {
       e.target.value = this.mask.getValue()
+      window.mask = this.mask
       this._updateInputSelection()
-      if (this.props.onChange) {
-        this.props.onChange(e)
-      }
+      this._updateValue(e)
     }
-  },
+  }
 
   _onPaste(e) {
     // console.log('onPaste', JSON.stringify(getSelection(this.input)), e.clipboardData.getData('Text'), e.target.value)
@@ -224,16 +211,21 @@ var MaskedInput = React.createClass({
       e.target.value = this.mask.getValue()
       // Timeout needed for IE
       setTimeout(this._updateInputSelection, 0)
-      if (this.props.onChange) {
-        this.props.onChange(e)
-      }
+      this._updateValue(e)
     }
-  },
+  }
+
+  _updateValue(e) {
+    this.mask.setValue(this.mask.getValue())
+    if (this.props.onChange) {
+      this.props.onChange(e)
+    }
+  }
 
   _getDisplayValue() {
     var value = this.mask.getValue()
     return value === this.mask.emptyValue ? '' : value
-  },
+  }
 
   _keyPressPropName() {
     if (typeof navigator !== 'undefined') {
@@ -242,36 +234,126 @@ var MaskedInput = React.createClass({
       : 'onKeyPress'
     }
     return 'onKeyPress'
-  },
+  }
 
   _getEventHandlers() {
     return {
-      onChange: this._onChange,
-      onKeyDown: this._onKeyDown,
-      onPaste: this._onPaste,
-      [this._keyPressPropName()]: this._onKeyPress
+      onChange: (e) => this._onChange(e),
+      onKeyDown: (e) => this._onKeyDown(e),
+      onPaste: (e) => this._onPaste(e),
+      [this._keyPressPropName()]: (e) => this._onKeyPress(e)
     }
-  },
+  }
 
   focus() {
     this.input.focus()
-  },
+  }
 
   blur() {
     this.input.blur()
-  },
+  }
 
   render() {
-    var ref = r => this.input = r
-    var maxLength = this.mask.pattern.length
-    var value = this._getDisplayValue()
-    var eventHandlers = this._getEventHandlers()
-    var { size = maxLength, placeholder = this.mask.emptyValue } = this.props
+    let ref = r => { this.input = r }
+    let maxLength = this.mask.pattern.length
+    let value = this._getDisplayValue()
+    let eventHandlers = this._getEventHandlers()
+    let { size = maxLength, placeholder = this.mask.emptyValue } = this.props
 
-    var {placeholderChar, formatCharacters, ...cleanedProps} = this.props
-    var inputProps = { ...cleanedProps, ...eventHandlers, ref, maxLength, value, size, placeholder }
+    let {placeholderChar, formatCharacters, isRevealingMask, ...cleanedProps} = this.props
+    let inputProps = { ...cleanedProps, ...eventHandlers, ref, maxLength, value, size, placeholder }
     return <input {...inputProps} />
   }
-})
+}
 
-module.exports = MaskedInput
+MaskedInput.propTypes = {
+  mask: PropTypes.string.isRequired,
+  formatCharacters: PropTypes.object,
+  placeholderChar: PropTypes.string
+}
+
+MaskedInput.defaultProps = {
+  value: ''
+}
+
+export class MaskedInputFixed extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      val: ''
+    }
+  }
+  componentWillMount() {
+    if (this.props.value) {
+      this.setState({
+        val: this.props.value
+      })
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.value) {
+      this.setState({
+        val: nextProps.value
+      })
+    }
+  }
+
+  _onChange(e) {
+    let val = e.target.value
+    let placeholderChar = this.props.placeholderChar
+    let index = val.indexOf(placeholderChar)
+    let newVal = index === -1 ? val : val.slice(0, index)
+    this.setState({
+      val: newVal
+    })
+  }
+
+  render() {
+    let { showPlaceholder, placeholderFixed, className, classWrapper, classPlaceholder, onChange, ...filteredProps } = this.props
+    let { placeholderChar, isRevealingMask, ...filteredPropsforInput } = filteredProps
+    let fixedPlaceholder = this.state.val.concat(placeholderFixed.slice(this.state.val.length))
+
+    let newClassWrapper = classWrapper ? classWrapper + ' maskedWrapper ' : 'maskedWrapper'
+    let newClassPlaceholder = classPlaceholder ? classPlaceholder + ' maskedPlaceholder' : 'maskedPlaceholder'
+    let newClassMasked = className ? className + ' maskedInput' : 'maskedInput'
+
+    return <div className={newClassWrapper}>
+            <MaskedInput {...filteredProps}
+                 onChange={(e) => {
+                   this._onChange(e)
+                   onChange(e)
+                 }}
+                 value={this.state.val}
+                 ref={(r) => this.input = r && r.input}
+              className={newClassMasked}/>
+            <input { ...filteredPropsforInput }
+                    value={ fixedPlaceholder }
+                    className={this.props.hidePlaceholder ? newClassPlaceholder + ' hide' : newClassPlaceholder}
+                    disabled />
+          </div>
+  }
+}
+
+MaskedInputFixed.defaultProps = {
+  placeholderChar: ' ',
+  isRevealingMask: true
+}
+
+class MaskedSwitch extends React.Component {
+  render() {
+    return (
+      this.props.placeholderFixed
+      ? <MaskedInputFixed {...this.props} ref={(r) => this.input = r && r.input} />
+      : <MaskedInput {...this.props} ref={(r) => this.input = r && r.input} />
+    )
+  }
+}
+
+MaskedSwitch.propTypes = {
+  mask: PropTypes.string.isRequired,
+  formatCharacters: PropTypes.object,
+  placeholderChar: PropTypes.string
+}
+
+export default MaskedSwitch

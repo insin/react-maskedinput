@@ -1,0 +1,21 @@
+.maskedWrapper {
+  position:relative;
+}
+
+.maskedInput {
+  background:transparent;
+  z-index:10;
+}
+
+.maskedPlaceholder {
+  position:absolute;
+  width:100%;
+  left:0;
+  top:0;
+  z-index:-1;
+}
+
+.maskedPlaceholder.hide {
+    display: none;
+}
+    
