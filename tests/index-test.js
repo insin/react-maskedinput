@@ -2,7 +2,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import expect from 'expect'
-import MaskedInput from 'src'
+import MaskedInput from '../src'
 
 const setup = () => {
   const element = document.createElement('div')
@@ -154,6 +154,42 @@ describe('MaskedInput', () => {
 
     // update value
     render({mask: defaultMask, value: '4111'})
+    input = ReactDOM.findDOMNode(ref)
+
+    // initial state
+    expect(input.value).toBe('4111 ')
+    expect(input.size).toBe(19)
+    expect(input.selectionStart).toBe(5)
+
+    cleanup(el)
+  })
+
+  it('should handle updating value with placeHolderFixed option', () => {
+    const el = setup()
+    let ref = null
+    let defaultMask = '1111 1111 1111 1111'
+
+    function render(props) {
+      ReactDOM.render(
+        <MaskedInput
+          ref={(r) => ref = r && r.input}
+          placeholderFixed="1111 1111 1111 1111"
+          {...props}
+        />,
+        el
+      )
+    }
+
+    render({mask: defaultMask, value: '', isRevealingMask: true})
+    let input = ReactDOM.findDOMNode(ref)
+    // initial state
+    expect(input.value).toBe('')
+    expect(input.placeholder).toBe('')
+    expect(input.size).toBe(19)
+    expect(input.selectionStart).toBe(0)
+
+    // update value
+    render({mask: defaultMask, value: '4111', isRevealingMask: true})
     input = ReactDOM.findDOMNode(ref)
 
     // initial state

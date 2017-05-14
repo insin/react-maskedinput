@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import InputMask from 'inputmask-core'
+import './style.css'
 
 var KEYCODE_Z = 90
 var KEYCODE_Y = 89
@@ -58,7 +59,7 @@ function setSelection(el, selection) {
   catch (e) { /* not focused or not visible */ }
 }
 
-class MaskedInput extends React.Component {
+export class MaskedInput extends React.Component {
   constructor(props) {
     super(props)
   }
@@ -275,4 +276,84 @@ MaskedInput.defaultProps = {
   value: ''
 }
 
-export default MaskedInput
+export class MaskedInputFixed extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      val: ''
+    }
+  }
+  componentWillMount() {
+    if (this.props.value) {
+      this.setState({
+        val: this.props.value
+      })
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.value) {
+      this.setState({
+        val: nextProps.value
+      })
+    }
+  }
+
+  _onChange(e) {
+    let val = e.target.value
+    let placeholderChar = this.props.placeholderChar
+    let index = val.indexOf(placeholderChar)
+    let newVal = index === -1 ? val : val.slice(0, index)
+    this.setState({
+      val: newVal
+    })
+  }
+
+  render() {
+    let { showPlaceholder, placeholderFixed, className, classWrapper, classPlaceholder, onChange, ...filteredProps } = this.props
+    let { placeholderChar, isRevealingMask, ...filteredPropsforInput } = filteredProps
+    let fixedPlaceholder = this.state.val.concat(placeholderFixed.slice(this.state.val.length))
+
+    let newClassWrapper = classWrapper ? classWrapper + ' maskedWrapper ' : 'maskedWrapper'
+    let newClassPlaceholder = classPlaceholder ? classPlaceholder + ' maskedPlaceholder' : 'maskedPlaceholder'
+    let newClassMasked = className ? className + ' maskedInput' : 'maskedInput'
+
+    return <div className={newClassWrapper}>
+            <MaskedInput {...filteredProps}
+                 onChange={(e) => {
+                   this._onChange(e)
+                   onChange(e)
+                 }}
+                 value={this.state.val}
+                 ref={(r) => this.input = r && r.input}
+              className={newClassMasked}/>
+            <input { ...filteredPropsforInput }
+                    value={ fixedPlaceholder }
+                    className={this.props.hidePlaceholder ? newClassPlaceholder + ' hide' : newClassPlaceholder}
+                    disabled />
+          </div>
+  }
+}
+
+MaskedInputFixed.defaultProps = {
+  placeholderChar: ' ',
+  isRevealingMask: true
+}
+
+class MaskedSwitch extends React.Component {
+  render() {
+    return (
+      this.props.placeholderFixed
+      ? <MaskedInputFixed {...this.props} ref={(r) => this.input = r && r.input} />
+      : <MaskedInput {...this.props} ref={(r) => this.input = r && r.input} />
+    )
+  }
+}
+
+MaskedSwitch.propTypes = {
+  mask: PropTypes.string.isRequired,
+  formatCharacters: PropTypes.object,
+  placeholderChar: PropTypes.string
+}
+
+export default MaskedSwitch

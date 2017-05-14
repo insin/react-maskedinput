@@ -1,9 +1,9 @@
 import './style.css'
 
 import React from 'react'
-import {render} from 'react-dom'
+import { render } from 'react-dom'
 
-import MaskedInput from '../../src'
+import MaskedInput ,{MaskedInputFixed } from '../../src'
 
 const PATTERNS = [
   '1111 1111',
@@ -32,6 +32,7 @@ class App extends React.Component {
   _onChange(e) {
     const stateChange = {}
     stateChange[e.target.name] = e.target.value
+    console.log(this.masked)
     this.setState(stateChange)
   }
 
@@ -55,7 +56,7 @@ class App extends React.Component {
       <p className="lead">A React component which creates a masked <code>&lt;input/&gt;</code></p>
       <div className="form-field">
         <label htmlFor="card">Card Number:</label>
-        <MaskedInput mask="1111 1111 1111 1111" name="card" id="card" size="20" value={this.state.card} onChange={(e) => this._onChange(e)}/>
+        <MaskedInput ref={(r) => this.refmask = r} mask="1111 1111 1111 1111" name="card" id="card" size="20" value={this.state.card} onChange={(e) => this._onChange(e)}/>
       </div>
       <p>You can even externally update the card state like a standard input element:</p>
       <div className="form-field">
@@ -71,6 +72,14 @@ class App extends React.Component {
       <div className="form-field">
         <label htmlFor="expiry">Expiry Date:</label>
         <MaskedInput mask="11/1111" name="expiry" id="expiry" placeholder="mm/yyyy" onChange={(e) => this._onChange(e)} isRevealingMask/>
+      </div>
+      <p>Placeholders could be fixed while typing with Revealing Mask</p>
+      <div className="form-field">
+        <label htmlFor="expiry">Expiry Date:</label>
+        <MaskedInput ref={(r)=> this.masked = r} mask="11/1111" name="expiry" id="expiry" placeholderFixed="mm/yyyy" onChange={(e) => this._onChange(e)} 
+        classWrapper="inputInline"
+        classPlaceholder="inputGrey" 
+        />
       </div>
       <div className="form-field">
         <label htmlFor="ccv">CCV:</label>
