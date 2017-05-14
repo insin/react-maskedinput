@@ -124,6 +124,17 @@ A default `placeholder` will be generated from the mask's pattern, but you can p
 
 By default, the rendered `<input>`'s `size` will be the length of the pattern, but you can pass a `size` prop to override this.
 
+### `isRevealingMask` : `boolean`
+
+An optional property that, if true, progressively shows the mask as input is entered. Defaults to `false`
+
+Example:
+Given an input with a mask of `111-1111 x 111`, a value of `47`, and `isRevealingMask` set to `true`, then the input's value is formatted as `47`
+Given the same input but with a value of `476`, then the input's value is formatted as `476-`
+Given the same input but with a value of `47 3191`, then the input's value is formatted as `47_-3191 x `
+
+See the [inputmask-core docs](https://github.com/insin/inputmask-core#isrevealingmask--boolean) for details.
+
 ### Other props
 
 Any other props passed in will be passed as props to the rendered `<input>`, except for the following, which are managed by the component:

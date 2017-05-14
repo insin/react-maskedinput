@@ -66,6 +66,11 @@ const App = React.createClass({
         <label htmlFor="expiry">Expiry Date:</label>
         <MaskedInput mask="11/1111" name="expiry" id="expiry" placeholder="mm/yyyy" onChange={this._onChange}/>
       </div>
+      <p>You can set 'isRevealingMask' to true to make mask revealing on your typing</p>
+      <div className="form-field">
+        <label htmlFor="expiry">Expiry Date:</label>
+        <MaskedInput mask="11/1111" name="expiry" id="expiry" placeholder="mm/yyyy" onChange={this._onChange} isRevealingMask/>
+      </div>
       <div className="form-field">
         <label htmlFor="ccv">CCV:</label>
         <MaskedInput mask="111" name="ccv" id="ccv" onChange={this._onChange}/>
