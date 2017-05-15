@@ -128,6 +128,42 @@ describe('MaskedInput', () => {
     cleanup(el)
   })
 
+  it('should handle updating value with isRevealingMask option', () => {
+    const el = setup()
+    let ref = null
+    let defaultMask = '1111 1111 1111 1111'
+
+    function render(props) {
+      ReactDOM.render(
+        <MaskedInput
+          ref={(r) => ref = r}
+          {...props}
+        />,
+        el
+      )
+    }
+
+    render({mask: defaultMask, value: '', isRevealingMask: true})
+    let input = ReactDOM.findDOMNode(ref)
+
+    // initial state
+    expect(input.value).toBe('')
+    expect(input.placeholder).toBe('')
+    expect(input.size).toBe(19)
+    expect(input.selectionStart).toBe(0)
+
+    // update value
+    render({mask: defaultMask, value: '4111'})
+    input = ReactDOM.findDOMNode(ref)
+
+    // initial state
+    expect(input.value).toBe('4111 ')
+    expect(input.size).toBe(19)
+    expect(input.selectionStart).toBe(5)
+
+    cleanup(el)
+  })
+
   it('should handle updating mask and value', () => {
     const el = setup()
     let ref = null
