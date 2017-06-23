@@ -1,5 +1,6 @@
 var React = require('react')
 var InputMask = require('inputmask-core')
+var PropTypes require('prop-types')
 
 var KEYCODE_Z = 90
 var KEYCODE_Y = 89
@@ -59,10 +60,10 @@ function setSelection(el, selection) {
 
 var MaskedInput = React.createClass({
   propTypes: {
-    mask: React.PropTypes.string.isRequired,
+    mask: PropTypes.string.isRequired,
 
-    formatCharacters: React.PropTypes.object,
-    placeholderChar: React.PropTypes.string
+    formatCharacters: PropTypes.object,
+    placeholderChar: PropTypes.string
   },
 
   getDefaultProps() {
