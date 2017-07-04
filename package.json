@@ -1,6 +1,6 @@
 {
   "name": "react-maskedinput",
-  "version": "3.3.4",
+  "version": "4.0.0",
   "description": "Masked <input/> React component",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -10,7 +10,7 @@
     "umd"
   ],
   "scripts": {
-    "build": "nwb build-react-component --no-polyfill",
+    "build": "nwb build-react-component",
     "clean": "nwb clean-module && nwb clean-demo",
     "lint": "eslint src tests",
     "start": "nwb serve-react-demo",

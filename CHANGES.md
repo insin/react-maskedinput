@@ -1,3 +1,5 @@
+## 4.0.0 / 2017-07-04
+
 * Potential breaking change as the `peerDependencies` range has been changed from `"0.14.x || 15.x"` to `"^0.14.9 || ^15.3.0"`.
 
 * Use `React.Component` instead of `React.createClass` and the `prop-types` package instead of `React.PropTypes` to silence deprecation warnings [[#94](https://github.com/insin/react-maskedinput/pull/94)] [[krvital][krvital]]
