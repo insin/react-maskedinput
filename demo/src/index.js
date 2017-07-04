@@ -41,9 +41,10 @@ class App extends React.Component {
   }
 
   _onCardChange(e) {
-    if(/^3[47]/.test(e.target.value)) {
-      this.setState({cardPattern: "1111 111111 11111"})
-    } else {
+    if (/^3[47]/.test(e.target.value)) {
+      this.setState({cardPattern: '1111 111111 11111'})
+    }
+    else {
       this.setState({cardPattern: '1111 1111 1111 1111'})
     }
   }

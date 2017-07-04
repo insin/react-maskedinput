@@ -100,7 +100,7 @@ describe('MaskedInput', () => {
     function render(props) {
       ReactDOM.render(
         <MaskedInput
-          ref={(r) => ref = r}
+          ref={(r) => { ref = r }}
           {...props}
         />,
         el
@@ -139,7 +139,7 @@ describe('MaskedInput', () => {
     function render(props) {
       ReactDOM.render(
         <MaskedInput
-          ref={(r) => ref = r}
+          ref={(r) => { ref = r }}
           {...props}
         />,
         el
@@ -215,13 +215,17 @@ describe('MaskedInput', () => {
     let defaultMask = '1111 1111 1111 1111'
     function render(props) {
       ReactDOM.render(
-        <MaskedInput ref={(r) => ref = r} {...props} />,
+        <MaskedInput ref={(r) => { ref = r }} {...props} />,
         el
       )
     }
     expect.spyOn(console, 'error')
-    render({mask: defaultMask, value: '',
-            placeholderChar: 'X', formatCharacters: {A: null}})
+    render({
+      mask: defaultMask,
+      value: '',
+      placeholderChar: 'X',
+      formatCharacters: {A: null}
+    })
     expect(console.error).toNotHaveBeenCalled()
     console.error.restore()
     let input = ReactDOM.findDOMNode(ref)
@@ -240,7 +244,7 @@ describe('MaskedInput', () => {
     function render(props) {
       ReactDOM.render(
         <MaskedInput
-          ref={(r) => ref = r}
+          ref={(r) => { ref = r }}
           {...props}
         />,
         el
