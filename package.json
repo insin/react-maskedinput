@@ -29,17 +29,17 @@
     "test:watch": "nwb test --server"
   },
   "dependencies": {
-    "inputmask-core": "^2.1.1"
+    "inputmask-core": "^2.1.1",
+    "prop-types": "^15.5.7"
   },
   "peerDependencies": {
-    "react": "0.14.x || 15.x.x",
-    "prop-types": "^15.5.8"
+    "react": "^0.14.9 || ^15.3.0"
   },
   "devDependencies": {
     "eslint-config-jonnybuchanan": "2.0.3",
     "nwb": "0.9.x",
-    "react": "15.x.x",
-    "react-dom": "15.x.x"
+    "react": "15.x",
+    "react-dom": "15.x"
   },
   "repository": {
     "type": "git",
