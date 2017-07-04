@@ -9,38 +9,34 @@ const PATTERNS = [
   '1111 1111',
   '111 111',
   '11 11',
-  '1 1'
+  '1 1',
 ]
 
 class App extends React.Component {
-  constructor(props) {
-    super(props)
-    
-    this.state = {
-      card: '',
-      expiry: '',
-      ccv: '',
-      plate: '',
-      escaped: '',
-      leading: '',
-      custom: '',
-      changing: '',
-      pattern: '1111 1111',
-      cardPattern: '1111 1111 1111 1111'
-    }
+  state = {
+    card: '',
+    expiry: '',
+    ccv: '',
+    plate: '',
+    escaped: '',
+    leading: '',
+    custom: '',
+    changing: '',
+    pattern: '1111 1111',
+    cardPattern: '1111 1111 1111 1111',
   }
 
-  _onChange(e) {
+  _onChange = (e) => {
     const stateChange = {}
     stateChange[e.target.name] = e.target.value
     this.setState(stateChange)
   }
 
-  _changePattern(e) {
+  _changePattern = (e) => {
     this.setState({pattern: e.target.value})
   }
 
-  _onCardChange(e) {
+  _onCardChange = (e) => {
     if (/^3[47]/.test(e.target.value)) {
       this.setState({cardPattern: '1111 111111 11111'})
     }
