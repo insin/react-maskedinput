@@ -1,32 +1,22 @@
 {
   "name": "react-maskedinput",
-  "description": "Masked <input/> React component",
   "version": "3.3.4",
-  "main": "./lib/index.js",
-  "jsnext:main": "es6/index.js",
-  "standalone": "MaskedInput",
-  "homepage": "https://github.com/insin/react-maskedinput",
-  "license": "MIT",
-  "author": "Jonny Buchanan <jonathan.buchanan@gmail.com>",
-  "keywords": [
-    "react",
-    "masked",
-    "input",
-    "react-component"
-  ],
+  "description": "Masked <input/> React component",
+  "main": "lib/index.js",
+  "module": "es/index.js",
   "files": [
-    "es6",
+    "es",
     "lib",
     "umd"
   ],
   "scripts": {
-    "build": "nwb build",
-    "clean": "nwb clean",
+    "build": "nwb build-react-component --no-polyfill",
+    "clean": "nwb clean-module && nwb clean-demo",
     "lint": "eslint src tests",
-    "start": "nwb serve",
-    "test": "nwb test",
+    "start": "nwb serve-react-demo",
+    "test": "nwb test-react",
     "posttest": "npm run lint",
-    "test:watch": "nwb test --server"
+    "test:watch": "nwb test-react --server"
   },
   "dependencies": {
     "inputmask-core": "^2.1.1",
@@ -37,12 +27,21 @@
   },
   "devDependencies": {
     "eslint-config-jonnybuchanan": "5.0.x",
-    "nwb": "0.9.x",
+    "nwb": "0.17.x",
     "react": "15.x",
     "react-dom": "15.x"
   },
+  "author": "Jonny Buchanan <jonathan.buchanan@gmail.com>",
+  "homepage": "https://github.com/insin/react-maskedinput",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "http://github.com/insin/react-maskedinput.git"
-  }
+  },
+  "keywords": [
+    "react",
+    "masked",
+    "input",
+    "react-component"
+  ]
 }
