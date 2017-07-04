@@ -1,3 +1,15 @@
+* Potential breaking change as the `peerDependencies` range has been changed from `"0.14.x || 15.x"` to `"^0.14.9 || ^15.3.0"`.
+
+* Use `React.Component` instead of `React.createClass` and the `prop-types` package instead of `React.PropTypes` to silence deprecation warnings [[#94](https://github.com/insin/react-maskedinput/pull/94)] [[krvital][krvital]]
+
+* Update nwb to 0.17.x:
+  * `module` config replaces `jsnext:main` in `package.json` to specify the location of the ES6 modules build.
+  * `prop-types` is bundled with the UMD development build and stripped from the production build, along with usage of `propTypes`.
+
+## 3.3.4 / 2016-12-15
+
+* Silence React 15.4 invalid property warnings [[#80](https://github.com/insin/react-maskedinput/pull/80)] [[nathanstitt][nathanstitt]]
+
 ## 3.3.2 / 2016-12-01
 
 * Fix for both Android and MS Edge input entering
@@ -67,5 +79,7 @@ Initial release features:
 * Placeholder generation and display when the mask has no user input
 
 [jquense]: https://github.com/jquense
+[krvital]: https://github.com/krvital
 [muffinresearch]: https://github.com/muffinresearch
 [martyphee]: https://github.com/martyphee
+[nathanstitt]: https://github.com/nathanstitt
