@@ -18,6 +18,7 @@ module.exports = function(build) {
     // demo build.
     config.webpack = {
       extra: {
+        devtool: 'source-map',
         node: {
           process: false
         }
