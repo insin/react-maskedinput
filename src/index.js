@@ -122,6 +122,9 @@ class MaskedInput extends React.Component {
 
   _updateMaskSelection() {
     this.mask.selection = getSelection(this.input)
+      setTimeout(function() {
+          this.input.setSelectionRange(this.mask.selection.start, this.mask.selection.end);
+      }.bind(this), 1);
   }
 
   _updateInputSelection() {
