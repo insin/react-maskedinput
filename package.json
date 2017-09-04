@@ -1,5 +1,5 @@
 {
-  "name": "react-maskedinput",
+  "name": "react-maskedinput-privacy",
   "version": "4.0.0",
   "description": "Masked <input/> React component",
   "main": "lib/index.js",
