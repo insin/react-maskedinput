@@ -142,6 +142,7 @@ class MaskedInput extends React.Component {
       }
       var value = this._getDisplayValue()
       e.target.value = value
+      e.target.rawValue = this.mask.getRawValue()
       if (value) {
         this._updateInputSelection()
       }
@@ -158,6 +159,7 @@ class MaskedInput extends React.Component {
       e.preventDefault()
       if (this.mask.undo()) {
         e.target.value = this._getDisplayValue()
+        e.target.rawValue = this.mask.getRawValue()
         this._updateInputSelection()
         if (this.props.onChange) {
           this.props.onChange(e)
@@ -169,6 +171,7 @@ class MaskedInput extends React.Component {
       e.preventDefault()
       if (this.mask.redo()) {
         e.target.value = this._getDisplayValue()
+        e.target.rawValue = this.mask.getRawValue()
         this._updateInputSelection()
         if (this.props.onChange) {
           this.props.onChange(e)
@@ -183,6 +186,7 @@ class MaskedInput extends React.Component {
       if (this.mask.backspace()) {
         var value = this._getDisplayValue()
         e.target.value = value
+        e.target.rawValue = this.mask.getRawValue()
         if (value) {
           this._updateInputSelection()
         }
@@ -204,6 +208,7 @@ class MaskedInput extends React.Component {
     this._updateMaskSelection()
     if (this.mask.input((e.key || e.data))) {
       e.target.value = this.mask.getValue()
+      e.target.rawValue = this.mask.getRawValue()
       this._updateInputSelection()
       if (this.props.onChange) {
         this.props.onChange(e)
@@ -219,6 +224,7 @@ class MaskedInput extends React.Component {
     // getData value needed for IE also works in FF & Chrome
     if (this.mask.paste(e.clipboardData.getData('Text'))) {
       e.target.value = this.mask.getValue()
+      e.target.rawValue = this.mask.getRawValue()
       // Timeout needed for IE
       setTimeout(this._updateInputSelection.bind(this), 0)
       if (this.props.onChange) {
