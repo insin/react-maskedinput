@@ -6,3 +6,8 @@
 /umd
 npm-debug.log*
 package-lock.json
+.idea/misc.xml
+.idea/react-maskedinput-privacy.iml
+.idea/modules.xml
+.idea/workspace.xml
+.idea/vcs.xml

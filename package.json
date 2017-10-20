@@ -1,6 +1,6 @@
 {
-  "name": "react-maskedinput",
-  "version": "4.0.0",
+  "name": "react-maskedinput-privacy",
+  "version": "4.0.1",
   "description": "Masked <input/> React component",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -31,12 +31,11 @@
     "react": "15.x",
     "react-dom": "15.x"
   },
-  "author": "Jonny Buchanan <jonathan.buchanan@gmail.com>",
-  "homepage": "https://github.com/insin/react-maskedinput",
+  "author": "Greg Hawk <hawktrax@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "http://github.com/insin/react-maskedinput.git"
+    "url": "http://github.com/greghawk/react-maskedinput-privacy.git"
   },
   "keywords": [
     "react",
