@@ -66,6 +66,7 @@ class MaskedInput extends React.Component {
     this._onKeyDown = this._onKeyDown.bind(this)
     this._onPaste = this._onPaste.bind(this)
     this._onKeyPress = this._onKeyPress.bind(this)
+    this._updateInputSelection = this._updateInputSelection.bind(this)
   }
 
   componentWillMount() {
@@ -132,20 +133,14 @@ class MaskedInput extends React.Component {
     // console.log('onChange', JSON.stringify(getSelection(this.input)), e.target.value)
 
     var maskValue = this.mask.getValue()
-    if (e.target.value !== maskValue) {
-      // Cut or delete operations will have shortened the value
-      if (e.target.value.length < maskValue.length) {
-        var sizeDiff = maskValue.length - e.target.value.length
-        this._updateMaskSelection()
-        this.mask.selection.end = this.mask.selection.start + sizeDiff
-        this.mask.backspace()
-      }
-      var value = this._getDisplayValue()
-      e.target.value = value
-      if (value) {
-        this._updateInputSelection()
-      }
+    var incomingValue = e.target.value
+    if (incomingValue !== maskValue) { // only modify mask if form contents actually changed
+      this._updateMaskSelection()
+      this.mask.setValue(incomingValue) // write the whole updated value into the mask
+      e.target.value = this._getDisplayValue() // update the form with pattern applied to the value
+      this._updateInputSelection()
     }
+
     if (this.props.onChange) {
       this.props.onChange(e)
     }
