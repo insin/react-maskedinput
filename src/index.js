@@ -220,7 +220,7 @@ class MaskedInput extends React.Component {
     if (this.mask.paste(e.clipboardData.getData('Text'))) {
       e.target.value = this.mask.getValue()
       // Timeout needed for IE
-      setTimeout(this._updateInputSelection, 0)
+      setTimeout(this._updateInputSelection.bind(this), 0)
       if (this.props.onChange) {
         this.props.onChange(e)
       }
