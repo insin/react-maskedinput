@@ -28,16 +28,22 @@ The browser bundle exposes a global `MaskedInput` variable and expects to find a
 Give `MaskedInput` a [`mask`](#mask-string) and an `onChange` callback:
 
 ```javascript
-var React = require('react')
-var MaskedInput = require('react-maskedinput')
+import React, { Component } from 'react'
+import MaskedInput from 'react-maskedinput'
 
-var CreditCardDetails = React.createClass({
-  state: {
-    card: '',
-    expiry: '',
-    ccv: ''
-  },
-
+class CreditCardDetails extends Component {
+  constructor(props) {
+    super(props)
+    
+    this.state = {
+      card: '',
+      expiry: '',
+      ccv: ''
+    }
+    
+    this._onChange = this._onChange.bind(this)
+  }
+  
   _onChange(e) {
     var stateChange = {}
     stateChange[e.target.name] = e.target.value
@@ -60,28 +66,26 @@ var CreditCardDetails = React.createClass({
       </label>
     </div>
   }
-})
+};
 ```
 
 Create some wrapper components if you have a masking configuration which will be reused:
 
 ```javascript
-var CustomInput = React.createClass({
-  render() {
-    return <MaskedInput
-      mask="1111-WW-11"
-      placeholder="1234-WW-12"
-      size="11"
-      {...this.props}
-      formatCharacters={{
-        'W': {
-          validate(char) { return /\w/.test(char ) },
-          transform(char) { return char.toUpperCase() }
-        }
+const CustomInput = (props) => (
+  <MaskedInput
+    mask="1111-WW-11"
+    placeholder="1234-WW-12"
+    size="11"
+    {...props}
+    formatCharacters={{
+      'W': {
+        validate(char) { return /\w/.test(char ) },
+        transform(char) { return char.toUpperCase() }
       }
-    }/>
-  }
-})
+    }}
+  />
+)
 ```
 
 ## Props
