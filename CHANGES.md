@@ -1,3 +1,5 @@
+* Update nwb to 0.21.x to fix UMD build, which was exporting an object with a `default` property
+
 ## 4.0.0 / 2017-07-04
 
 * Potential breaking change as the `peerDependencies` range has been changed from `"0.14.x || 15.x"` to `"^0.14.9 || ^15.3.0"`.

@@ -27,9 +27,9 @@
   },
   "devDependencies": {
     "eslint-config-jonnybuchanan": "5.0.x",
-    "nwb": "0.17.x",
-    "react": "15.x",
-    "react-dom": "15.x"
+    "nwb": "0.21.x",
+    "react": "16.x",
+    "react-dom": "16.x"
   },
   "author": "Jonny Buchanan <jonathan.buchanan@gmail.com>",
   "homepage": "https://github.com/insin/react-maskedinput",
