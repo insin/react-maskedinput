@@ -10,15 +10,13 @@ A [React](http://facebook.github.io/react/) component for `<input>` masking, bui
 
 ### npm
 
-`MaskedInput` can be used on the server, or bundled for the client using an npm-compatible packaging system such as [Browserify](http://browserify.org/) or [webpack](http://webpack.github.io/).
-
 ```
 npm install react-maskedinput --save
 ```
 
 ### Browser bundle
 
-The browser bundle exposes a global `MaskedInput` variable and expects to find a global `React` (>= 0.14.0) variable to work with.
+The browser bundle exposes a global `MaskedInput` variable and expects to find a global `React` variable to work with.
 
 * [react-maskedinput.js](https://unpkg.com/react-maskedinput/umd/react-maskedinput.js) (development version)
 * [react-maskedinput.min.js](https://unpkg.com/react-maskedinput/umd/react-maskedinput.min.js) (compressed production version)
@@ -28,21 +26,19 @@ The browser bundle exposes a global `MaskedInput` variable and expects to find a
 Give `MaskedInput` a [`mask`](#mask-string) and an `onChange` callback:
 
 ```javascript
-var React = require('react')
-var MaskedInput = require('react-maskedinput')
+import React from 'react'
+import MaskedInput from 'react-maskedinput'
 
-var CreditCardDetails = React.createClass({
-  state: {
+class CreditCardDetails extends React.Component {
+  state = {
     card: '',
     expiry: '',
     ccv: ''
-  },
+  }
 
-  _onChange(e) {
-    var stateChange = {}
-    stateChange[e.target.name] = e.target.value
-    this.setState(stateChange)
-  },
+  _onChange = (e) => {
+    this.setState({[e.target.name]: e.target.value})
+  }
 
   render() {
     return <div className="CreditCardDetails">
@@ -60,28 +56,26 @@ var CreditCardDetails = React.createClass({
       </label>
     </div>
   }
-})
+}
 ```
 
 Create some wrapper components if you have a masking configuration which will be reused:
 
 ```javascript
-var CustomInput = React.createClass({
-  render() {
-    return <MaskedInput
-      mask="1111-WW-11"
-      placeholder="1234-WW-12"
-      size="11"
-      {...this.props}
-      formatCharacters={{
-        'W': {
-          validate(char) { return /\w/.test(char ) },
-          transform(char) { return char.toUpperCase() }
-        }
+function CustomInput(props) {
+  return <MaskedInput
+    mask="1111-WW-11"
+    placeholder="1234-WW-12"
+    size="11"
+    {...props}
+    formatCharacters={{
+      'W': {
+        validate(char) { return /\w/.test(char ) },
+        transform(char) { return char.toUpperCase() }
       }
-    }/>
-  }
-})
+    }}
+  />
+}
 ```
 
 ## Props

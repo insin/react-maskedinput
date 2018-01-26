@@ -27,9 +27,7 @@ class App extends React.Component {
   }
 
   _onChange = (e) => {
-    const stateChange = {}
-    stateChange[e.target.name] = e.target.value
-    this.setState(stateChange)
+    this.setState({[e.target.name]: e.target.value})
   }
 
   _changePattern = (e) => {
@@ -99,7 +97,7 @@ class App extends React.Component {
         <label htmlFor="changing">Credit Card:</label>
         <MaskedInput mask={this.state.cardPattern} name="creditCard" id="creditCard" onChange={this._onCardChange}/>
       </div>
-      <p>Custom format character (W=[a-zA-Z0-9_], transformed to uppercase) and placeholder character (en space):</p>
+      <p>Custom format character (<code>W=[a-zA-Z0-9_]</code>, transformed to uppercase) and placeholder character (en space):</p>
       <div className="form-field">
         <label htmlFor="custom">Custom:</label>
         <CustomInput name="custom" id="custom" onChange={this._onChange}/>
@@ -112,7 +110,7 @@ class App extends React.Component {
   }
 }
 
-const CustomInput = (props) =>
+let CustomInput = (props) =>
   <MaskedInput
     mask="1111-WW-11"
     placeholder="1234-WW-12"
@@ -121,8 +119,8 @@ const CustomInput = (props) =>
     {...props}
     formatCharacters={{
       'W': {
-        validate(char) { return /\w/.test(char) },
-        transform(char) { return char.toUpperCase() }
+        validate: (char) => /\w/.test(char),
+        transform: (char) => char.toUpperCase()
       }
     }}
   />
