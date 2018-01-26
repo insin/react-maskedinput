@@ -1,3 +1,5 @@
+## 4.0.1 / 2018-01-26 🇦🇺
+
 * Fix auto-fill scenarios by using data from `onChange` events [[#112]((https://github.com/insin/react-maskedinput/pull/112)]
 
 * Fix wrong scope in `onPaste` event [[#108]((https://github.com/insin/react-maskedinput/pull/108)]
