@@ -1,3 +1,7 @@
+## 4.0.2 / 2018-02-08
+
+* Prevent paste in disabled state
+
 ## 4.0.1 / 2018-01-26 🇦🇺
 
 * Fix auto-fill scenarios by using data from `onChange` events [[#112](https://github.com/insin/react-maskedinput/pull/112)]

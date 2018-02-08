@@ -206,11 +206,12 @@ class MaskedInput extends React.Component {
 
   _onPaste = (e) => {
     // console.log('onPaste', JSON.stringify(getSelection(this.input)), e.clipboardData.getData('Text'), e.target.value)
+    const {disabled} = this.props
 
     e.preventDefault()
     this._updateMaskSelection()
     // getData value needed for IE also works in FF & Chrome
-    if (this.mask.paste(e.clipboardData.getData('Text'))) {
+    if (!disabled && this.mask.paste(e.clipboardData.getData('Text'))) {
       e.target.value = this.mask.getValue()
       // Timeout needed for IE
       setTimeout(() => this._updateInputSelection(), 0)
