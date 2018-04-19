@@ -60,7 +60,8 @@ class MaskedInput extends React.Component {
     mask: PropTypes.string.isRequired,
 
     formatCharacters: PropTypes.object,
-    placeholderChar: PropTypes.string
+    placeholderChar: PropTypes.string,
+    onBadInput: PropTypes.func,
   }
 
   static defaultProps = {
@@ -202,6 +203,9 @@ class MaskedInput extends React.Component {
         this.props.onChange(e)
       }
     }
+    else {
+      this._fireBadInput()
+    }
   }
 
   _onPaste = (e) => {
@@ -241,6 +245,13 @@ class MaskedInput extends React.Component {
       onKeyDown: this._onKeyDown,
       onPaste: this._onPaste,
       [this._keyPressPropName()]: this._onKeyPress
+    }
+  }
+
+  _fireBadInput () {
+    const {onBadInput} = this.props
+    if (typeof onBadInput === 'function') {
+      onBadInput()
     }
   }
 
