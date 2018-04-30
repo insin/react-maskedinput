@@ -55,12 +55,15 @@ function setSelection(el, selection) {
   catch (e) { /* not focused or not visible */ }
 }
 
-class MaskedInput extends React.Component {
+class MaskedInput extends React.PureComponent {
   static propTypes = {
     mask: PropTypes.string.isRequired,
-
+    onChange: PropTypes.func,
     formatCharacters: PropTypes.object,
     placeholderChar: PropTypes.string,
+    value: PropTypes.any,
+    placeholder: PropTypes.string,
+    size: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     onBadInput: PropTypes.func,
   }
 
@@ -270,7 +273,7 @@ class MaskedInput extends React.Component {
     let eventHandlers = this._getEventHandlers()
     let { size = maxLength, placeholder = this.mask.emptyValue } = this.props
 
-    let { placeholderChar, formatCharacters, ...cleanedProps } = this.props // eslint-disable-line no-unused-vars
+    let { placeholderChar, formatCharacters, onBadInput, ...cleanedProps } = this.props // eslint-disable-line no-unused-vars
     let inputProps = { ...cleanedProps, ...eventHandlers, ref, maxLength, value, size, placeholder }
     return <input {...inputProps} />
   }

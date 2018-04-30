@@ -118,6 +118,10 @@ A default `placeholder` will be generated from the mask's pattern, but you can p
 
 By default, the rendered `<input>`'s `size` will be the length of the pattern, but you can pass a `size` prop to override this.
 
+### `onBadInput` : `() => void`
+
+A callback which will be called any time the user inputs or pastes invalid character(s).****
+
 ### Other props
 
 Any other props passed in will be passed as props to the rendered `<input>`, except for the following, which are managed by the component:
