@@ -55,12 +55,16 @@ function setSelection(el, selection) {
   catch (e) { /* not focused or not visible */ }
 }
 
-class MaskedInput extends React.Component {
+class MaskedInput extends React.PureComponent {
   static propTypes = {
     mask: PropTypes.string.isRequired,
-
+    onChange: PropTypes.func,
     formatCharacters: PropTypes.object,
-    placeholderChar: PropTypes.string
+    placeholderChar: PropTypes.string,
+    value: PropTypes.any,
+    placeholder: PropTypes.string,
+    size: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    onBadInput: PropTypes.func,
   }
 
   static defaultProps = {
@@ -202,15 +206,19 @@ class MaskedInput extends React.Component {
         this.props.onChange(e)
       }
     }
+    else {
+      this._fireBadInput()
+    }
   }
 
   _onPaste = (e) => {
     // console.log('onPaste', JSON.stringify(getSelection(this.input)), e.clipboardData.getData('Text'), e.target.value)
+    const {disabled} = this.props
 
     e.preventDefault()
     this._updateMaskSelection()
     // getData value needed for IE also works in FF & Chrome
-    if (this.mask.paste(e.clipboardData.getData('Text'))) {
+    if (!disabled && this.mask.paste(e.clipboardData.getData('Text'))) {
       e.target.value = this.mask.getValue()
       // Timeout needed for IE
       setTimeout(() => this._updateInputSelection(), 0)
@@ -243,6 +251,13 @@ class MaskedInput extends React.Component {
     }
   }
 
+  _fireBadInput () {
+    const {onBadInput} = this.props
+    if (typeof onBadInput === 'function') {
+      onBadInput()
+    }
+  }
+
   focus() {
     this.input.focus()
   }
@@ -258,7 +273,7 @@ class MaskedInput extends React.Component {
     let eventHandlers = this._getEventHandlers()
     let { size = maxLength, placeholder = this.mask.emptyValue } = this.props
 
-    let { placeholderChar, formatCharacters, ...cleanedProps } = this.props // eslint-disable-line no-unused-vars
+    let { placeholderChar, formatCharacters, onBadInput, ...cleanedProps } = this.props // eslint-disable-line no-unused-vars
     let inputProps = { ...cleanedProps, ...eventHandlers, ref, maxLength, value, size, placeholder }
     return <input {...inputProps} />
   }

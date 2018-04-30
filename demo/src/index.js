@@ -1,7 +1,7 @@
 import './style.css'
 
 import React from 'react'
-import {render} from 'react-dom'
+import {render, findDOMNode} from 'react-dom'
 
 import MaskedInput from '../../src'
 
@@ -12,7 +12,7 @@ const PATTERNS = [
   '1 1',
 ]
 
-class App extends React.Component {
+class App extends React.PureComponent {
   state = {
     card: '',
     expiry: '',
@@ -43,6 +43,24 @@ class App extends React.Component {
     }
   }
 
+  _onBadInput = () => {
+    if (this.timerId) {
+      return;
+    }
+    this.inputCardNode.classList.add('is-invalid');
+    this.timerId = setTimeout(() => {
+      delete this.timerId;
+      this.inputCardNode.classList.remove('is-invalid');
+    }, 400);
+  };
+
+  componentWillUnmount() {
+    if (this.timerId) {
+      clearTimeout(this.timerId);
+      delete this.timerId;
+    }
+  };
+
   render() {
     return <div className="App">
       <h1>
@@ -51,7 +69,8 @@ class App extends React.Component {
       <p className="lead">A React component which creates a masked <code>&lt;input/&gt;</code></p>
       <div className="form-field">
         <label htmlFor="card">Card Number:</label>
-        <MaskedInput mask="1111 1111 1111 1111" name="card" id="card" size="20" value={this.state.card} onChange={this._onChange}/>
+        <MaskedInput mask="1111 1111 1111 1111" name="card" id="card" size="20" value={this.state.card} onChange={this._onChange}
+          ref={input => this.inputCardNode = findDOMNode(input)} onBadInput={this._onBadInput} />
       </div>
       <p>You can even externally update the card state like a standard input element:</p>
       <div className="form-field">

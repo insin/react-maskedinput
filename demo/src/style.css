@@ -39,3 +39,8 @@ input {
 footer {
   text-align: center;
 }
+.is-invalid {
+  outline-color: #efa2a9;
+  -webkit-transition: outline-color 0.2s;
+  transition: outline-color 0.2s;
+}
