@@ -77,17 +77,17 @@ class MaskedInput extends React.Component {
         this.mask.setPattern(this.props.mask, {value: this.props.value})
       }
       else {
-        this.mask.setPattern( this.props.mask, {value: this.mask.getRawValue()})
+        this.mask.setPattern(this.props.mask, {value: this.mask.getRawValue()})
       }
     }
-    else if (this.props.mask !==  this.props.mask) {
-      this.mask.setPattern( this.props.mask, {value: this.mask.getRawValue()})
+    else if (this.props.mask !== this.props.mask) {
+      this.mask.setPattern(this.props.mask, {value: this.mask.getRawValue()})
     }
-    else if (this.props.value !==  this.props.value) {
-      this.mask.setValue( this.props.value)
+    else if (this.props.value !== this.props.value) {
+      this.mask.setValue(this.props.value)
     }
-    ///
-    if ( this.props.mask !== prevProps.mask ) {
+
+    if (this.props.mask !== prevProps.mask) {
       this.mask.selection.start && this._updateInputSelection()
       this._updatePattern(this.props)
     }
