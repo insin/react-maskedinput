@@ -67,48 +67,29 @@ class MaskedInput extends React.Component {
     value: ''
   }
 
-  componentWillMount() {
-    let options = {
-      pattern: this.props.mask,
-      value: this.props.value,
-      formatCharacters: this.props.formatCharacters
-    }
-    if (this.props.placeholderChar) {
-      options.placeholderChar = this.props.placeholderChar
-    }
-    this.mask = new InputMask(options)
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.props.mask !== nextProps.mask && this.props.value !== nextProps.mask) {
+  componentDidUpdate(prevProps) {
+    if (prevProps.mask !== this.props.mask && prevProps.value !== this.props.mask) {
       // if we get a new value and a new mask at the same time
       // check if the mask.value is still the initial value
-      // - if so use the nextProps value
+      // - if so use the this.props value
       // - otherwise the `this.mask` has a value for us (most likely from paste action)
       if (this.mask.getValue() === this.mask.emptyValue) {
-        this.mask.setPattern(nextProps.mask, {value: nextProps.value})
+        this.mask.setPattern(this.props.mask, {value: this.props.value})
       }
       else {
-        this.mask.setPattern(nextProps.mask, {value: this.mask.getRawValue()})
+        this.mask.setPattern(this.props.mask, {value: this.mask.getRawValue()})
       }
     }
-    else if (this.props.mask !== nextProps.mask) {
-      this.mask.setPattern(nextProps.mask, {value: this.mask.getRawValue()})
+    else if (this.props.mask !== this.props.mask) {
+      this.mask.setPattern(this.props.mask, {value: this.mask.getRawValue()})
     }
-    else if (this.props.value !== nextProps.value) {
-      this.mask.setValue(nextProps.value)
+    else if (this.props.value !== this.props.value) {
+      this.mask.setValue(this.props.value)
     }
-  }
 
-  componentWillUpdate(nextProps, nextState) {
-    if (nextProps.mask !== this.props.mask) {
-      this._updatePattern(nextProps)
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.mask !== this.props.mask && this.mask.selection.start) {
-      this._updateInputSelection()
+    if (this.props.mask !== prevProps.mask) {
+      this.mask.selection.start && this._updateInputSelection()
+      this._updatePattern(this.props)
     }
   }
 
@@ -252,6 +233,17 @@ class MaskedInput extends React.Component {
   }
 
   render() {
+    let options = {
+      pattern: this.props.mask,
+      value: this.props.value,
+      formatCharacters: this.props.formatCharacters
+    }
+
+    if (this.props.placeholderChar) {
+      options.placeholderChar = this.props.placeholderChar
+    }
+
+    this.mask = new InputMask(options)
     let ref = r => { this.input = r }
     let maxLength = this.mask.pattern.length
     let value = this._getDisplayValue()
