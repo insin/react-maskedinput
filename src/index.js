@@ -60,11 +60,13 @@ class MaskedInput extends React.Component {
     mask: PropTypes.string.isRequired,
 
     formatCharacters: PropTypes.object,
-    placeholderChar: PropTypes.string
+    placeholderChar: PropTypes.string,
+    render: PropTypes.func
   }
 
   static defaultProps = {
-    value: ''
+    value: '',
+    render: undefined
   }
 
   componentWillMount() {
@@ -256,11 +258,13 @@ class MaskedInput extends React.Component {
     let maxLength = this.mask.pattern.length
     let value = this._getDisplayValue()
     let eventHandlers = this._getEventHandlers()
-    let { size = maxLength, placeholder = this.mask.emptyValue } = this.props
+    let { size = maxLength, render, placeholder = this.mask.emptyValue } = this.props
 
     let { placeholderChar, formatCharacters, ...cleanedProps } = this.props // eslint-disable-line no-unused-vars
     let inputProps = { ...cleanedProps, ...eventHandlers, ref, maxLength, value, size, placeholder }
-    return <input {...inputProps} />
+    return render
+        ? render(inputProps)
+        : <input {...inputProps} />
   }
 }
 
