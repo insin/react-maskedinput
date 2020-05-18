@@ -1,3 +1,7 @@
+## 4.0.2 / 2020-05-18
+
+* Renamed lifecycle methods to add the UNSAFE_ prefix in order to remove warnings in developer mode
+
 ## 4.0.1 / 2018-01-26 🇦🇺
 
 * Fix auto-fill scenarios by using data from `onChange` events [[#112](https://github.com/insin/react-maskedinput/pull/112)]
