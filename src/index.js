@@ -67,7 +67,8 @@ class MaskedInput extends React.Component {
     value: ''
   }
 
-  componentWillMount() {
+  /* eslint-disable camelcase */
+  UNSAFE_componentWillMount() {
     let options = {
       pattern: this.props.mask,
       value: this.props.value,
@@ -79,7 +80,8 @@ class MaskedInput extends React.Component {
     this.mask = new InputMask(options)
   }
 
-  componentWillReceiveProps(nextProps) {
+  /* eslint-disable camelcase */
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.mask !== nextProps.mask && this.props.value !== nextProps.mask) {
       // if we get a new value and a new mask at the same time
       // check if the mask.value is still the initial value
@@ -100,7 +102,8 @@ class MaskedInput extends React.Component {
     }
   }
 
-  componentWillUpdate(nextProps, nextState) {
+  /* eslint-disable camelcase */
+  UNSAFE_componentWillUpdate(nextProps, nextState) {
     if (nextProps.mask !== this.props.mask) {
       this._updatePattern(nextProps)
     }
