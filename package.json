@@ -23,7 +23,7 @@
     "prop-types": "^15.5.7"
   },
   "peerDependencies": {
-    "react": "^0.14.9 || ^15.3.0 || ^16.0.0"
+    "react": "^0.14.9 || ^15.3.0 || ^17.0.0"
   },
   "devDependencies": {
     "eslint-config-jonnybuchanan": "5.0.x",
